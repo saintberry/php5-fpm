@@ -4,8 +4,7 @@ This PHP5-FPM Cookbook allows for installation of PHP-FPM, configuration of user
 
 Requirements
 ------------
-Ubuntu 12.04+
-Debian Wheezy+
+Debian, Ubuntu
 
 No additional packages are required.
 
