@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: php-fpm
+# Cookbook Name:: php5-fpm
 # Recipe:: create_user
 #
 # Copyright 2014, Stajkowski

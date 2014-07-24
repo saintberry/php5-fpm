@@ -1,6 +1,6 @@
-php-fpm Cookbook
+php5-fpm Cookbook
 ================
-This PHP-FPM Cookbook allows for installation of PHP-FPM, configuration of users and directories, base configuration, and pool configuration.  The attributes file gives full control over the configration for all pools and PHP-FPM configuration with JSON.
+This PHP5-FPM Cookbook allows for installation of PHP-FPM, configuration of users and directories, base configuration, and pool configuration.  The attributes file gives full control over the configration for all pools and PHP-FPM configuration with JSON.
 
 Requirements
 ------------
@@ -12,7 +12,7 @@ No additional packages are required.
 Attributes
 ----------
 
-#### php-fpm::default
+#### php5-fpm::default
 <table>
   <tr>
     <th>Key</th>
@@ -50,52 +50,52 @@ Usage
 -----
 #### php-fpm::install
 
-Install PHP-FPM. Include `php-fpm::install` in your node's `run_list`:
+Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
 
 ```json
 {
   "name":"my_node",
   "run_list": [
-    "recipe[php-fpm::install]"
+    "recipe[php5-fpm::install]"
   ]
 }
 ```
 
 #### php-fpm::create_user
 
-This will create users and directories for use with pools. Include `php-fpm::create_user` in your node's `run_list`:
+This will create users and directories for use with pools. Include `php5-fpm::create_user` in your node's `run_list`:
 
 ```json
 {
   "name":"my_node",
   "run_list": [
-    "recipe[php-fpm::create_user]"
+    "recipe[php5-fpm::create_user]"
   ]
 }
 ```
 
 #### php-fpm::configure_pools
 
-This will create pools based on JSON configuration. Include `php-fpm::configure_pools` in your node's `run_list`:
+This will create pools based on JSON configuration. Include `php5-fpm::configure_pools` in your node's `run_list`:
 
 ```json
 {
   "name":"my_node",
   "run_list": [
-    "recipe[php-fpm::configure_pools]"
+    "recipe[php5-fpm::configure_pools]"
   ]
 }
 ```
 
 #### php-fpm::configure_fpm
 
-This will replace the php-fpm.conf file based on JSON configuration. Include `php-fpm::configure_fpm` in your node's `run_list`:
+This will replace the php-fpm.conf file based on JSON configuration. Include `php5-fpm::configure_fpm` in your node's `run_list`:
 
 ```json
 {
   "name":"my_node",
   "run_list": [
-    "recipe[php-fpm::configure_fpm]"
+    "recipe[php5-fpm::configure_fpm]"
   ]
 }
 ```
