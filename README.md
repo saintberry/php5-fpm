@@ -20,13 +20,13 @@ Attributes
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>["packages"]["ubuntu_debian"]["install_php_modules"]</tt></td>
+    <td><tt>["php_fpm"]["install_php_modules"]</tt></td>
     <td>Boolean</td>
     <td>Install Additional PHP Modules</td>
     <td><tt>true</tt></td>
   </tr>
   <tr>
-    <td><tt>["users"]["php"]</tt></td>
+    <td><tt>["php_fpm"]["users"]</tt></td>
     <td>JSON</td>
     <td>Users/Directories to Add</td>
     <td><tt>Attributes File</tt></td>
@@ -60,7 +60,7 @@ Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
 }
 ```
 
-#### php-fpm::create_user
+#### php5-fpm::create_user
 
 This will create users and directories for use with pools. Include `php5-fpm::create_user` in your node's `run_list`:
 
@@ -73,7 +73,7 @@ This will create users and directories for use with pools. Include `php5-fpm::cr
 }
 ```
 
-#### php-fpm::configure_pools
+#### php5-fpm::configure_pools
 
 This will create pools based on JSON configuration. Include `php5-fpm::configure_pools` in your node's `run_list`:
 
@@ -86,7 +86,7 @@ This will create pools based on JSON configuration. Include `php5-fpm::configure
 }
 ```
 
-#### php-fpm::configure_fpm
+#### php5-fpm::configure_fpm
 
 This will replace the php-fpm.conf file based on JSON configuration. Include `php5-fpm::configure_fpm` in your node's `run_list`:
 

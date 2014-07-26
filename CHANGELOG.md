@@ -7,4 +7,8 @@ This file is used to list changes made in each version of the php-fpm cookbook.
 -----
 - stajkowski - Intial Commit/Base Recipes
 
+0.1.3
+-----
+- stajkowski - Rework attribute structure, prepare for additional platforms
+
 - - -

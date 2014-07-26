@@ -13,7 +13,7 @@
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
 #Parse users
-parsed_users = JSON.parse(node[:users][:php])
+parsed_users = JSON.parse(node[:php_fpm][:users])
 
 #Create Folder Strucuture and PHP User
 parsed_users["users"].each do |username,config|

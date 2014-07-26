@@ -18,29 +18,23 @@ bash "Run apt-get update" do
     action :run
 end
 
-#Install Prereqs, PHP, PHP-FPM and Other Modules
-case node[:platform]
-when "ubuntu", "debian"
-
-    #Install PHP-FPM Package
-    node[:packages][:ubuntu_debian][:fpm].each do |install_packages|
-        package install_packages do
-            action :install
-        end
+#Install PHP-FPM Package
+node[:php_fpm][:package].each do |install_packages|
+    package install_packages do
+        action :install
     end
+end
     
-    #Install PHP Modules if Enabled
-    node[:packages][:ubuntu_debian][:php_modules].each do |install_packages|
-        package install_packages do
-            action :install
-            only_if { node[:packages][:ubuntu_debian][:install_php_modules] }
-        end
+#Install PHP Modules if Enabled
+node[:php_fpm][:php_modules].each do |install_packages|
+    package install_packages do
+        action :install
+        only_if { node[:php_fpm][:install_php_modules] }
     end
+end
 
-    #Enable and Restart PHP5-FPM
-    service node[:packages][:ubuntu_debian][:fpm] do
-        supports :start => true, :stop => true, :restart => true, :reload => true
-        action [ :enable, :restart ]
-    end
-
+#Enable and Restart PHP5-FPM
+service node[:php_fpm][:package] do
+    supports :start => true, :stop => true, :restart => true, :reload => true
+    action [ :enable, :restart ]
 end

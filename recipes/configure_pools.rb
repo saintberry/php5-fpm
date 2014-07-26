@@ -18,20 +18,14 @@ parsed_pools = JSON.parse(node[:php_fpm][:pools])
 #Loop through pools and generate configuration
 parsed_pools.each do |pool,configuration|
 
-	#Select Platform
-	case node[:platform]
-	when "ubuntu", "debian"
-
-		#Create Pool Configuration
-		template "#{node[:php_fpm][:ubuntu_debian][:pools_path]}/#{pool}.conf" do
-			source "pool.erb"
-			variables({
-					:POOL_NAME => pool
-				})
-			action :create
-			notifies :restart, "service[#{node[:packages][:ubuntu_debian][:fpm]}]", :delayed
-		end
-		
+	#Create Pool Configuration
+	template "#{node[:php_fpm][:pools_path]}/#{pool}.conf" do
+		source "pool.erb"
+		variables({
+			:POOL_NAME => pool
+		})
+		action :create
+		notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
 	end
 
 end

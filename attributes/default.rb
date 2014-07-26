@@ -1,30 +1,31 @@
-
-#SET INSTALL MODULES
-default["packages"]["ubuntu_debian"]["fpm"] = "php5-fpm"
-default["packages"]["ubuntu_debian"]["install_php_modules"] = true
-default["packages"]["ubuntu_debian"]["php_modules"] = [ 'php5-common', 
-														'php5-mysql', 
-														'php5-curl', 
-														'php5-gd', 
-														'php-pear', 
-														'php5-mcrypt', 
-														'php5-memcache', 
-														'php5-snmp', 
-														'php5-sqlite', 
-														'php5-tidy', 
-														'php5-xmlrpc', 
-														'php5-xsl' 
-													]
-
-#SET USERNAMES AND FOLDERS
-default["users"]["php"] = '{ "users": 
-                            		{ "joom_user": { "dir": "/joom_base", "system": "true", "group": "www-data" } } 
+#Global options, install php modules and users(optional)
+default["php_fpm"]["install_php_modules"] = "true"
+default["php_fpm"]["users"] = '{ "users": 
+                            		{ "fpm_user": { "dir": "/base_path", "system": "true", "group": "www-data" } } 
                             }'
 
-#SET POOLS AND POOL CONFIGURATION
-default["php_fpm"]["ubuntu_debian"]["base_path"] = "/etc/php5/fpm"
-default["php_fpm"]["ubuntu_debian"]["pools_path"] = "#{node[:php_fpm][:ubuntu_debian][:base_path]}/pool.d"
+#Select Platform Configuration
+case node[:platform]
+when "ubuntu", "debian"
+	default["php_fpm"]["package"] = "php5-fpm"
+	default["php_fpm"]["base_path"] = "/etc/php5/fpm"
+	default["php_fpm"]["pools_path"] = "#{node[:php_fpm][:base_path]}/pool.d"
+	default["php_fpm"]["php_modules"] = [ 'php5-common', 
+															'php5-mysql', 
+															'php5-curl', 
+															'php5-gd', 
+															'php-pear', 
+															'php5-mcrypt', 
+															'php5-memcache', 
+															'php5-snmp', 
+															'php5-sqlite', 
+															'php5-tidy', 
+															'php5-xmlrpc', 
+															'php5-xsl' 
+														]
+end
 
+#Set php-fpm.conf configuration
 default["php_fpm"]["config"] = '{ "config":
 									{
 									"pid": "/var/run/php5-fpm.pid",
@@ -43,7 +44,8 @@ default["php_fpm"]["config"] = '{ "config":
 									},
 								  "pool_directory": "include=/etc/php5/fpm/pool.d/*.conf"
 								}'
-								
+
+#Set pool configuration, default pool				
 default["php_fpm"]["pools"] = '{ "www":
 									{
 										"user": "www-data",
