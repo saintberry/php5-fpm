@@ -1,8 +1,11 @@
 #Global options, install php modules and users(optional)
 default["php_fpm"]["install_php_modules"] = "true"
+default["php_fpm"]["update_system"] = "true"
 default["php_fpm"]["users"] = '{ "users": 
-                            		{ "fpm_user": { "dir": "/base_path", "system": "true", "group": "www-data" } } 
-                            }'
+                            		{ 
+                            			"fpm_user": { "dir": "/base_path", "system": "true", "group": "fpm_group" }
+                            		}
+                            	}'
 
 #Select Platform Configuration
 case node[:platform]
@@ -10,47 +13,49 @@ when "ubuntu", "debian"
 	default["php_fpm"]["package"] = "php5-fpm"
 	default["php_fpm"]["base_path"] = "/etc/php5/fpm"
 	default["php_fpm"]["pools_path"] = "#{node[:php_fpm][:base_path]}/pool.d"
+	default["php_fpm"]["pools_include"] = "include=#{node[:php_fpm][:pools_path]}/*.conf"
 	default["php_fpm"]["php_modules"] = [ 'php5-common', 
-															'php5-mysql', 
-															'php5-curl', 
-															'php5-gd', 
-															'php-pear', 
-															'php5-mcrypt', 
-															'php5-memcache', 
-															'php5-snmp', 
-															'php5-sqlite', 
-															'php5-tidy', 
-															'php5-xmlrpc', 
-															'php5-xsl' 
-														]
+											'php5-mysql', 
+											'php5-curl', 
+											'php5-gd'
+										] #Option to add more or remove, override if needed or disable
+when "centos", "redhat"
+	default["php_fpm"]["package"] = "php-fpm"
+	default["php_fpm"]["base_path"] = "/etc"
+	default["php_fpm"]["pools_path"] = "#{node[:php_fpm][:base_path]}/php-fpm.d"
+	default["php_fpm"]["pools_include"] = "include=#{node[:php_fpm][:pools_path]}/*.conf"
+	default["php_fpm"]["php_modules"] = [ 'php-common', 
+											'php-mysql', 
+											'php-curl', 
+											'php-gd'
+										] #Option to add more or remove, override if needed or disable
 end
 
 #Set php-fpm.conf configuration
-default["php_fpm"]["config"] = '{ "config":
+default["php_fpm"]["config"] = '{ 	"config":
 									{
-									"pid": "/var/run/php5-fpm.pid",
-									"error_log": "/var/log/php5-fpm.log",
-									"syslog.facility": "daemon",
-									"syslog.ident": "php-fpm",
-									"log_level": "notice",
-									"emergency_restart_threshold": "0",
-									"emergency_restart_interval": "0",
-									"process_control_timeout": "0",
-									"process.max": "0",
-									"daemonize": "yes",
-									"rlimit_files": "NOT_SET",
-									"rlimit_core": "NOT_SET",
-									"events.mechanism": "NOT_SET"
-									},
-								  "pool_directory": "include=/etc/php5/fpm/pool.d/*.conf"
+										"pid": "/var/run/php5-fpm.pid",
+										"error_log": "/var/log/php5-fpm.log",
+										"syslog.facility": "daemon",
+										"syslog.ident": "php-fpm",
+										"log_level": "notice",
+										"emergency_restart_threshold": "0",
+										"emergency_restart_interval": "0",
+										"process_control_timeout": "0",
+										"process.max": "0",
+										"daemonize": "yes",
+										"rlimit_files": "NOT_SET",
+										"rlimit_core": "NOT_SET",
+										"events.mechanism": "NOT_SET"
+									}
 								}'
 
 #Set pool configuration, default pool				
-default["php_fpm"]["pools"] = '{ "www":
+default["php_fpm"]["pools"] = '{ 	"www":
 									{
-										"user": "www-data",
-										"group": "www-data",
-										"listen": "127.0.0.1:9000",
+										"user": "fpm_user",
+										"group": "fpm_group",
+										"listen": "127.0.0.1:9001",
 										"pm": "dynamic",
 										"pm.max_children": "10",
 										"pm.start_servers": "4",

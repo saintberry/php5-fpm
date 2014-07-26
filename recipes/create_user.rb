@@ -25,6 +25,14 @@ parsed_users["users"].each do |username,config|
         system parsed_users["users"][username]["system"] == "true"
     end
 
+    #Create the Groups
+    group parsed_users["users"][username]["group"] do
+        action :create
+        members username
+        append true
+        system parsed_users["users"][username]["system"] == "true"
+    end
+
     #Create the Directories
     directory parsed_users["users"][username]["dir"] do
         owner username

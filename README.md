@@ -2,11 +2,39 @@ php5-fpm Cookbook
 ================
 This PHP5-FPM Cookbook allows for installation of PHP-FPM, configuration of users and directories, base configuration, and pool configuration.  The attributes file gives full control over the configration for all pools and PHP-FPM configuration with JSON.
 
-Requirements
+Adding pools can be done by modifying the JSON directly in the attributes file or overriding the attributes through other methods, environments, roles, etc.
+
+
+
+Supported Platforms
 ------------
 Debian, Ubuntu
+CentOS, RedHat
 
 No additional packages are required.
+
+
+
+Changelog
+_________
+
+0.1.0
+-----
+- stajkowski - Intial Commit/Base Recipes.
+
+0.1.3
+-----
+- stajkowski - Rework attribute structure, prepare for additional platforms.
+
+- - -
+
+0.2.0
+-----
+- stajkowski - Added Redhat and CentOS support.  Allow for the option to update package repos on the system.
+
+- - -
+
+
 
 Attributes
 ----------
@@ -23,6 +51,12 @@ Attributes
     <td><tt>["php_fpm"]["install_php_modules"]</tt></td>
     <td>Boolean</td>
     <td>Install Additional PHP Modules</td>
+    <td><tt>true</tt></td>
+  </tr>
+  <tr>
+    <td><tt>["php_fpm"]["update_system"]</tt></td>
+    <td>Boolean</td>
+    <td>Update repository information</td>
     <td><tt>true</tt></td>
   </tr>
   <tr>
@@ -44,6 +78,8 @@ Attributes
     <td><tt>Attributes File</tt></td>
   </tr>
 </table>
+
+
 
 Usage
 -----
@@ -99,15 +135,7 @@ This will replace the php-fpm.conf file based on JSON configuration. Include `ph
 }
 ```
 
-Contributing
-------------
 
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write your change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
 
 License and Authors
 -------------------

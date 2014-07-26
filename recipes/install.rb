@@ -12,17 +12,33 @@
 #(_ P _ ((_ H _ ((_ P _ ((_ - _ ((_ F _ ((_ P _ ((_ M _ (_ 
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
-#Do apt-get update
-bash "Run apt-get update" do
-    code "apt-get update"
-    action :run
+if node[:php_fpm][:update_system]
+
+    #Select Platform
+    case node[:platform]
+    when "ubuntu", "debian"
+
+        #Do apt-get update
+        bash "Run apt-get update" do
+            code "apt-get update"
+            action :run
+        end
+
+    when "centos", "redhat"
+
+        #Do yum update -y
+        bash "Run yum update" do
+            code "yum update -y"
+            action :run
+        end
+
+    end
+
 end
 
 #Install PHP-FPM Package
-node[:php_fpm][:package].each do |install_packages|
-    package install_packages do
-        action :install
-    end
+package node[:php_fpm][:package] do
+    action :install
 end
     
 #Install PHP Modules if Enabled

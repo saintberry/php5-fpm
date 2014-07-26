@@ -22,4 +22,4 @@ fpm_config = JSON.parse(node[:php_fpm][:config])
 <% end -%>
 
 #POOL DIRECTORY LOCATION
-<%= fpm_config["pool_directory"] %>
+<%= node[:php_fpm][:pools_include] %>
