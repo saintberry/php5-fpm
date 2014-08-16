@@ -19,7 +19,7 @@ when "ubuntu", "debian"
 											'php5-curl', 
 											'php5-gd'
 										] #Option to add more or remove, override if needed or disable
-when "centos", "redhat"
+when "centos", "redhat", "fedora"
 	default["php_fpm"]["package"] = "php-fpm"
 	default["php_fpm"]["base_path"] = "/etc"
 	default["php_fpm"]["pools_path"] = "#{node[:php_fpm][:base_path]}/php-fpm.d"

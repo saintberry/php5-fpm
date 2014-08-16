@@ -10,3 +10,4 @@ supports 'ubuntu', ">= 12.04"
 supports 'debian', ">= 7.0"
 supports 'centOS', ">= 6.5"
 supports 'Redhat'
+supports 'Fedora', ">= 20"

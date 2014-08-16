@@ -4,19 +4,19 @@ This PHP5-FPM Cookbook allows for installation of PHP-FPM, configuration of user
 
 Adding pools can be done by modifying the JSON directly in the attributes file or overriding the attributes through other methods, environments, roles, etc.
 
-
+If you do not wish to use a configuration value, you can simply set it to NOT_SET and it will not be included in the confiruation file.  Additionally, you can add more configuration values if they are missing, future proofing the template generation.
 
 Supported Platforms
 ------------
 Debian, Ubuntu
-CentOS, RedHat
+CentOS, RedHat, Fedora
 
 No additional packages are required.
 
 
 
 Changelog
-_________
+---------
 
 0.1.0
 -----
@@ -31,6 +31,12 @@ _________
 0.2.0
 -----
 - stajkowski - Added Redhat and CentOS support.  Allow for the option to update package repos on the system.
+
+- - -
+
+0.2.1
+-----
+- stajkowski - Tested Fedora 20 support.  Generated Test Kitchen files and preparing for kitchen scripts.
 
 - - -
 

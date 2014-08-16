@@ -24,7 +24,7 @@ if node[:php_fpm][:update_system]
             action :run
         end
 
-    when "centos", "redhat"
+    when "centos", "redhat", "fedora"
 
         #Do yum update -y
         bash "Run yum update" do
