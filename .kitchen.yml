@@ -29,7 +29,7 @@ platforms:
         cpus: 1
 
 suites:
-  - name: default
+  - name: phpfpm
     run_list:
       - recipe[php5-fpm::install]
       - recipe[php5-fpm::create_user]
