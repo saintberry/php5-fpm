@@ -1,6 +1,6 @@
 require 'serverspec'
 
-include SpecInfra::Helper::Exec  
+include SpecInfra::Helper::Exec
 include SpecInfra::Helper::DetectOS
 
 if ['Debian', 'Ubuntu'].include?(os[:family])
