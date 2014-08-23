@@ -40,6 +40,12 @@ Changelog
 
 - - -
 
+0.2.2
+-----
+- stajkowski - Updated install receipe to fix the update/upgrade operation.  Now allows for the option and fully functional. Added and tested against more platforms, check .kitchen.yml.
+
+- - -
+
 
 
 Attributes
@@ -66,6 +72,12 @@ Attributes
     <td><tt>true</tt></td>
   </tr>
   <tr>
+    <td><tt>["php_fpm"]["create_users"]</tt></td>
+    <td>Boolean</td>
+    <td>Configure Users</td>
+    <td><tt>true</tt></td>
+  </tr>
+  <tr>
     <td><tt>["php_fpm"]["users"]</tt></td>
     <td>JSON</td>
     <td>Users/Directories to Add</td>
@@ -74,13 +86,13 @@ Attributes
   <tr>
     <td><tt>["php_fpm"]["config"]</tt></td>
     <td>JSON</td>
-    <td>PHP-FPM.conf Configuration Values/td>
+    <td>PHP-FPM.conf Configuration Values</td>
     <td><tt>Attributes File</tt></td>
   </tr>
   <tr>
     <td><tt>["php_fpm"]["pools"]</tt></td>
     <td>JSON</td>
-    <td><pool>.conf Configuration Values/td>
+    <td>pool.conf Configuration Values</td>
     <td><tt>Attributes File</tt></td>
   </tr>
 </table>

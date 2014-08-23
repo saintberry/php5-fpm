@@ -12,6 +12,7 @@
 #(_ P _ ((_ H _ ((_ P _ ((_ - _ ((_ F _ ((_ P _ ((_ M _ (_ 
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
+#Check if we are updating the Repos and System
 if node[:php_fpm][:update_system]
 
     #Select Platform
@@ -24,12 +25,35 @@ if node[:php_fpm][:update_system]
             action :run
         end
 
+        #Check if we are upgrading the system as well
+        if node[:php_fpm][:upgrade_system]
+
+            #Do apt-get upgrade
+            bash "Run apt-get upgrade" do
+                code "DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y"
+                action :run
+            end
+
+        end
+
     when "centos", "redhat", "fedora"
 
-        #Do yum update -y
-        bash "Run yum update" do
-            code "yum update -y"
+        #Do yum check-update
+        bash "Run yum check-update" do
+            code "yum check-update"
+            returns [0, 100]
             action :run
+        end
+
+        #Check if we are upgrading the system as well
+        if node[:php_fpm][:upgrade_system]
+
+            #Do yum update -y
+            bash "Run yum update" do
+                code "yum update -y"
+                action :run
+            end
+
         end
 
     end

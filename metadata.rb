@@ -4,7 +4,7 @@ maintainer_email 'stajkowski'
 license          'Apache Open License'
 description      'Installs/Configures php5-fpm'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.2.1'
+version          '0.2.2'
 
 supports 'ubuntu', ">= 12.04"
 supports 'debian', ">= 7.0"
