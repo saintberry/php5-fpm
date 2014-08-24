@@ -64,7 +64,7 @@ end
 package node[:php_fpm][:package] do
     action :install
 end
-    
+ 
 #Install PHP Modules if Enabled
 node[:php_fpm][:php_modules].each do |install_packages|
     package install_packages do
