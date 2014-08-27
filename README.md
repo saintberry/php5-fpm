@@ -42,7 +42,7 @@ Changelog
 
 0.2.2
 -----
-- stajkowski - Updated install receipe to fix the update/upgrade operation.  Now allows for the option and fully functional. Added and tested against more platforms, check .kitchen.yml.
+- stajkowski - Updated install receipe to fix the update/upgrade operation.  Now allows for the option and fully functional. Added and tested against more platforms, check .kitchen.yml.  Fixed 14.04 bug for service provider, will include this until the bug is fixed.
 
 - - -
 
@@ -69,6 +69,12 @@ Attributes
     <td><tt>["php_fpm"]["update_system"]</tt></td>
     <td>Boolean</td>
     <td>Update repository information</td>
+    <td><tt>true</tt></td>
+  </tr>
+  <tr>
+    <td><tt>["php_fpm"]["upgrade_system"]</tt></td>
+    <td>Boolean</td>
+    <td>Perform upgrades to OS</td>
     <td><tt>true</tt></td>
   </tr>
   <tr>
