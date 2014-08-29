@@ -20,6 +20,13 @@ platforms:
       customize:
         memory: 1024
         cpus: 1
+  - name: ubuntu-10.04
+    driver:
+      provider: virtualbox
+      box: chef/ubuntu-10.04
+      customize:
+        memory: 1024
+        cpus: 1
   - name: debian-6
     driver:
       provider: virtualbox
@@ -37,7 +44,7 @@ platforms:
   - name: centos-6.5
     driver:
       provider: virtualbox
-      box: insaneworks/centos
+      box: chef/centos-6.5
       customize:
         memory: 1024
         cpus: 1

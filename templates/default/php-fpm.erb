@@ -1,6 +1,10 @@
 <% 
 #Loop through pool configuration
-fpm_config = JSON.parse(node[:php_fpm][:config])
+if node[:platform_version].include?("10.04") && node[:platform].include?("ubuntu")
+	fpm_config = JSON.parse(node[:php_fpm][:ubuntu1004_config])
+else
+	fpm_config = JSON.parse(node[:php_fpm][:config])
+end
 -%>
 ###################################################################
 #																  #

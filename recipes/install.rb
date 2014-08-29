@@ -15,17 +15,74 @@
 #Configure REPO for Debian 6.x
 if node[:platform].include?("debian") && node[:platform_version].include?("6.")
 
-    #Install nginx repo, platform is set inside template
+    #Install php5-fpm repo Debian 6.x
     cookbook_file "/etc/apt/sources.list.d/dotdeb.list" do
         source "dotdeb.list"
         path "/etc/apt/sources.list.d/dotdeb.list"
         action :create
     end
 
+    #Install GPG Key Debian 6.x
+    bash "Add GPG Key Debian 6.x" do
+        code "wget http://www.dotdeb.org/dotdeb.gpg; apt-key add dotdeb.gpg"
+        action :run
+    end
+
+    #Flag for update
+    update_flag = true
+
+elsif node[:platform].include?("centos") && node[:platform_version].include?("6.")
+
+    #6.5 ships with php5.3.3 which causes issues with PHP-FPM.  Will be using webstatic repo for 5.4.
+
+    #Install Webstatic Repo CentOS 6.x
+    bash "Add Webstatic Repo CentOS 6.x" do
+        code "rpm -Uvh http://mirror.webtatic.com/yum/el6/latest.rpm"
+        action :run
+    end
+
+    #Remove PHP Common 5.3.3
+    package "php-common" do
+        action :remove
+    end
+
+    #Flag for update
+    update_flag = true
+
+elsif node[:platform].include?("ubuntu") && node[:platform_version].include?("10.04")
+
+    #Install Python Software Props Ubuntu 10.04
+    package "python-software-properties" do
+        action :install
+    end
+
+    #Install php5-fpm repo Ubuntu 10.04
+    cookbook_file "/etc/apt/sources.list.d/brianmercer.list" do
+        source "brianmercer.list"
+        path "/etc/apt/sources.list.d/brianmercer.list"
+        action :create
+    end
+
+    #Install Key Ubuntu 10.04
+    bash "Add Key Ubuntu 10.04" do
+        code "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8D0DC64F"
+        action :run
+    end
+
+    #Create FPM.d Directory Ubuntu 10.04
+    directory node[:php_fpm][:pools_path] do
+        mode 0755
+        action :create
+        recursive true
+    end
+
+    #Flag for update
+    update_flag = true
+
 end
 
 #Check if we are updating the Repos and System
-if node[:php_fpm][:update_system]
+if node[:php_fpm][:update_system] || update_flag
 
     #Select Platform
     case node[:platform]
@@ -72,17 +129,18 @@ if node[:php_fpm][:update_system]
 
 end
 
-#Install PHP-FPM Package
-package node[:php_fpm][:package] do
-    action :install
-end
-
 #Install PHP Modules if Enabled
 node[:php_fpm][:php_modules].each do |install_packages|
     package install_packages do
         action :install
         only_if { node[:php_fpm][:install_php_modules] }
     end
+end
+
+#Install PHP-FPM Package - Don't install if CentOS, it will be installed above as part of the module listing.
+package node[:php_fpm][:package] do
+    action :install
+    not_if { node[:platform].include?("centos") && node[:platform_version].include?("6.") }
 end
 
 #Enable and Restart PHP5-FPM
