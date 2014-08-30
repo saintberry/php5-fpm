@@ -8,12 +8,23 @@ If you do not wish to use a configuration value, you can simply set it to NOT_SE
 
 Supported Platforms
 ------------
-Debian, Ubuntu
-CentOS, RedHat, Fedora
+Debian(6.x+), Ubuntu(10.04+)
+CentOS(6.x+), RedHat, Fedora(20+)
 
 No additional packages are required.
 
+Tested Against:
 
+Debian 6.x and above
+Ubuntu 10.04 and above
+CenOS 6.x and above
+Fedora 20
+
+Planned Improvements
+---------
+
+0.2.3 - Add environment variables. Add additional OS support.
+0.3.0 - Develop LWRP for Pool Add/Modify/Remove
 
 Changelog
 ---------
@@ -42,7 +53,7 @@ Changelog
 
 0.2.2
 -----
-- stajkowski - Updated install receipe to fix the update/upgrade operation.  Now allows for the option and fully functional. Added and tested against more platforms, check .kitchen.yml.  Fixed 14.04 bug for service provider, will include this until the bug is fixed.  Added support for Debian 6.x and above and added support for Ubuntu 10.04 and above.
+- stajkowski - Updated install receipe to fix the update/upgrade operation.  Now allows for the option and fully functional. Added and tested against more platforms, check .kitchen.yml.  Fixed 14.04 bug for service provider, will include this until the bug is fixed.  Added support for Debian 6.x and above and added support for Ubuntu 10.04 and above, this has a seperate JSON configuration due to recent configuration settings not supported in these earlier versions.
 
 - - -
 
@@ -99,6 +110,18 @@ Attributes
     <td><tt>["php_fpm"]["pools"]</tt></td>
     <td>JSON</td>
     <td>pool.conf Configuration Values</td>
+    <td><tt>Attributes File</tt></td>
+  </tr>
+  <tr>
+    <td><tt>["php_fpm"]["ubuntu1004_config"]</tt></td>
+    <td>JSON</td>
+    <td>PHP-FPM.conf Configuration Values Ubuntu 10.04 Only</td>
+    <td><tt>Attributes File</tt></td>
+  </tr>
+  <tr>
+    <td><tt>["php_fpm"]["ubuntu1004_pools"]</tt></td>
+    <td>JSON</td>
+    <td>pool.conf Configuration Values Ubuntu 10.04 Only</td>
     <td><tt>Attributes File</tt></td>
   </tr>
 </table>

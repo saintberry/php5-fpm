@@ -33,12 +33,17 @@ if node[:platform].include?("debian") && node[:platform_version].include?("6.")
 
 elsif node[:platform].include?("centos") && node[:platform_version].include?("6.")
 
-    #6.5 ships with php5.3.3 which causes issues with PHP-FPM.  Will be using webstatic repo for 5.4.
-
-    #Install Webstatic Repo CentOS 6.x
-    bash "Add Webstatic Repo CentOS 6.x" do
-        code "rpm -Uvh http://mirror.webtatic.com/yum/el6/latest.rpm"
+    #Install RPMForge Key CentOS 6.x
+    bash "Add RPMForge Key CentOS 6.x" do
+        code "rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt"
         action :run
+    end
+
+    #Install RPMForge Repo
+    cookbook_file "/etc/yum.repos.d/rpmforge.repo" do
+        source "rpmforge.repo"
+        path "/etc/yum.repos.d/rpmforge.repo"
+        action :create
     end
 
     #Remove PHP Common 5.3.3
@@ -140,7 +145,6 @@ end
 #Install PHP-FPM Package - Don't install if CentOS, it will be installed above as part of the module listing.
 package node[:php_fpm][:package] do
     action :install
-    not_if { node[:platform].include?("centos") && node[:platform_version].include?("6.") }
 end
 
 #Enable and Restart PHP5-FPM

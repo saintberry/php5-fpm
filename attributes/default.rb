@@ -32,25 +32,11 @@ when "centos", "redhat", "fedora"
 	default["php_fpm"]["conf_file"] = "php-fpm.conf"
 	default["php_fpm"]["pools_path"] = "#{node[:php_fpm][:base_path]}/php-fpm.d"
 	default["php_fpm"]["pools_include"] = "include=#{node[:php_fpm][:pools_path]}/*.conf"
-	if node[:platform_version].include?("6.") && node[:platform].include?("centos")
-		default["php_fpm"]["php_modules"] = [ 'php54w', 
-											'php54w-mysql',
-											'php54w-common',
-											'php54w-gd',
-											'php54w-fpm'
-											] #Option to add more or remove, override if needed or disable
-
-											#Using webstatic repo for PHP5.4.  PHP5.3.3 has a bug with PHP-FPM and this is the version
-											#that is shipped with 6.5
-
-											#Please refer to this page for a list of available php modules: https://webtatic.com/packages/php54/
-	else
-		default["php_fpm"]["php_modules"] = [ 'php-common', 
+	default["php_fpm"]["php_modules"] = [ 'php-common', 
 											'php-mysql', 
 											'php-curl', 
 											'php-gd'
 											] #Option to add more or remove, override if needed or disable
-	end
 end
 
 #Set php-fpm.conf configuration
@@ -104,6 +90,8 @@ default["php_fpm"]["pools"] =
 	}
 }'
 
+#### FOR UBUNTU 10.04 ONLY
+
 #Set php-fpm.conf Ubuntu 10.04 configuration
 default["php_fpm"]["ubuntu1004_config"] = 
 '{ 	"config":
@@ -148,3 +136,6 @@ default["php_fpm"]["ubuntu1004_pools"] =
 		"chroot": "NOT_SET"
 	}
 }'
+
+#### OS OVERRIDES
+default["php_fpm"]["centos_pid"] = "/var/run/php-fpm/php-fpm.pid"

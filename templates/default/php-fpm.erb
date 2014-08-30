@@ -19,9 +19,15 @@ end
 
 <% fpm_config["config"].each do |configuration,value| -%>
 	<% if value != "NOT_SET" -%>
+		<% if configuration.include?("pid") && node[:platform].include?("centos") && node[:platform_version].include?("6.") -%>
+<%= "#SETTING CONFIGURATION: #{configuration} ###############" %>
+<%= "#{configuration} = #{node[:php_fpm][:centos_pid]}" %>
+
+		<% else -%>
 <%= "#SETTING CONFIGURATION: #{configuration} ###############" %>
 <%= "#{configuration} = #{value}" %>
 
+		<% end -%>
 	<% end -%>
 <% end -%>
 
