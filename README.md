@@ -24,7 +24,10 @@ Planned Improvements
 ---------
 
 0.2.3 - Add environment variables. Add additional OS support.
+____
+
 0.3.0 - Develop LWRP for Pool Add/Modify/Remove
+____
 
 Changelog
 ---------

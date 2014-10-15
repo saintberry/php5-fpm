@@ -1,7 +1,12 @@
 require 'serverspec'
 
-include SpecInfra::Helper::Exec
-include SpecInfra::Helper::DetectOS
+#################################################
+## New Version of Serverspec -- This is broken ##
+#include SpecInfra::Helper::Exec
+#include SpecInfra::Helper::DetectOS
+#################################################
+
+set :backend, :exec
 
 if ['Debian', 'Ubuntu'].include?(os[:family])
 
