@@ -3,8 +3,7 @@ require 'resolv'
 actions :create, :delete, :modify
 default_action :create if defined?(default_action)
 
-attribute :file_name, :name_attribute => true, :kind_of => String, :required => true
-attribute :pool_name, :kind_of => String, :required => true
+attribute :pool_name, :name_attribute => true, :kind_of => String, :required => true
 attribute :pool_user, :kind_of => String, :required => true, :default => 'www-data'
 attribute :pool_group, :kind_of => String, :required => true, :default => 'www-data'
 attribute :listen_address, :kind_of => String, :required => true, :default => '127.0.0.1', :regex => Resolv::IPv4::Regex
@@ -17,8 +16,8 @@ attribute :pm_min_spare_servers, :kind_of => Fixnum, :required => true, :default
 attribute :pm_max_spare_servers, :kind_of => Fixnum, :required => true, :default => '6'
 attribute :pm_process_idle_timeout, :kind_of => String, :required => true, :default => '10s'
 attribute :pm_max_requests, :kind_of => Fixnum, :required => true, :default => '0'
-attribute :pm_status_path, :kind_of => String, :required => false, :default => nil
 
+attribute :pm_status_path, :kind_of => String, :required => false, :default => nil
 attribute :ping_path, :kind_of => String, :required => false, :default => nil
 attribute :ping_response, :kind_of => String, :required => false, :default => nil
 
