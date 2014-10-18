@@ -108,6 +108,7 @@ def load_current_resource
                 end
 
                 #Finish out base configuration options
+                configuration_exists(lattr,"listen.allowed_clients") ? @current_resource.listen_allowed_clients(lstring.chomp.strip) : nil
                 configuration_exists(lattr,"listen.owner") ? @current_resource.listen_owner(lstring.chomp.strip) : nil
                 configuration_exists(lattr,"listen.group") ? @current_resource.listen_group(lstring.chomp.strip) : nil
                 configuration_exists(lattr,"listen.mode") ? @current_resource.listen_mode(lstring.chomp.strip) : nil
@@ -121,6 +122,25 @@ def load_current_resource
                 configuration_exists(lattr,"pm.process_idle_timeout") ? @current_resource.pm_process_idle_timeout(lstring.chomp.strip) : nil
                 configuration_exists(lattr,"pm.max_requests") ? @current_resource.pm_max_requests(lstring.chomp.strip.to_i) : nil
                 configuration_exists(lattr,"pm.status_path") ? @current_resource.pm_status_path(lstring.chomp.strip) : nil
+
+                #Start ping status
+                configuration_exists(lattr,"ping.path") ? @current_resource.ping_path(lstring.chomp.strip) : nil
+                configuration_exists(lattr,"ping.response") ? @current_resource.ping_response(lstring.chomp.strip) : nil
+
+                #Start logging
+                configuration_exists(lattr,"access.format") ? @current_resource.access_format(lstring.chomp.strip) : nil
+                configuration_exists(lattr,"request_slowlog_timeout") ? @current_resource.request_slowlog_timeout(lstring.chomp.strip.to_i) : nil
+                configuration_exists(lattr,"request_terminate_timeout") ? @current_resource.request_terminate_timeout(lstring.chomp.strip.to_i) : nil
+                configuration_exists(lattr,"access.log") ? @current_resource.access_log(lstring.chomp.strip) : nil
+                configuration_exists(lattr,"slowlog") ? @current_resource.slow_log(lstring.chomp.strip) : nil
+
+                #Start misc
+                configuration_exists(lattr,"chdir") ? @current_resource.chdir(lstring.chomp.strip) : nil
+                configuration_exists(lattr,"chroot") ? @current_resource.chroot(lstring.chomp.strip) : nil
+                configuration_exists(lattr,"catch_workers_output") ? @current_resource.catch_workers_output(lstring.chomp.strip) : nil
+                configuration_exists(lattr,"security.limit_extensions") ? @current_resource.security_limit_extensions(lstring.chomp.strip) : nil
+                configuration_exists(lattr,"rlimit_files") ? @current_resource.rlimit_files(lstring.chomp.strip) : nil
+                configuration_exists(lattr,"rlimit_core") ? @current_resource.rlimit_core(lstring.chomp.strip) : nil
 
             end
 
@@ -141,24 +161,44 @@ def create_file
 
         f.puts "[#{ @new_resource.pool_name }]"
 
-        f.puts "######Base Pool Configuration"
+        f.puts "###### Base Pool Configuration"
         f.puts "user = #{ @new_resource.pool_user }"
         f.puts "group = #{ @new_resource.pool_group }"
         f.puts "listen = #{ @new_resource.listen_address }:#{ @new_resource.listen_port }"
 
+        @current_resource.listen_allowed_clients != nil ? (f.puts "listen.allowed_clients = #{ @new_resource.listen_allowed_clients }") : nil
         @current_resource.listen_owner != nil ? (f.puts "listen.owner = #{ @new_resource.listen_owner }") : nil
         @current_resource.listen_group != nil ? (f.puts "listen.group = #{ @new_resource.listen_group }") : nil
         @current_resource.listen_mode != nil ? (f.puts "listen.mode = #{ @new_resource.listen_mode }") : nil
 
-        f.puts "######PM Configuration"
-        f.puts "pm = #{ @new_resource.pm }"
-        f.puts "pm.max_children = #{ @new_resource.pm_max_children }"
-        f.puts "pm.start_servers = #{ @new_resource.pm_start_servers }"
-        f.puts "pm.min_spare_servers = #{ @new_resource.pm_min_spare_servers }"
-        f.puts "pm.max_spare_servers = #{ @new_resource.pm_max_spare_servers }"
-        f.puts "pm.process_idle_timeout = #{ @new_resource.pm_process_idle_timeout }"
-        f.puts "pm.max_requests = #{ @new_resource.pm_max_requests }"
+        f.puts "###### PM Configuration"
+        @current_resource.pm != nil ? (f.puts "pm = #{ @new_resource.pm }") : nil
+        @current_resource.pm_max_children != nil ? (f.puts "pm.max_children = #{ @new_resource.pm_max_children }") : nil
+        @current_resource.pm_start_servers != nil ? (f.puts "pm.start_servers = #{ @new_resource.pm_start_servers }") : nil
+        @current_resource.pm_min_spare_servers != nil ? (f.puts "pm.min_spare_servers = #{ @new_resource.pm_min_spare_servers }") : nil
+        @current_resource.pm_max_spare_servers != nil ? (f.puts "pm.max_spare_servers = #{ @new_resource.pm_max_spare_servers }") : nil
+        @current_resource.pm_process_idle_timeout != nil ? (f.puts "pm.process_idle_timeout = #{ @new_resource.pm_process_idle_timeout }") : nil
+        @current_resource.pm_max_requests != nil ? (f.puts "pm.max_requests = #{ @new_resource.pm_max_requests }") : nil
         @current_resource.pm_status_path != nil ? (f.puts "pm.status_path = #{ @new_resource.pm_status_path }") : nil
+
+        f.puts "###### Ping Status"
+        @current_resource.ping_path != nil ? (f.puts "ping.path = #{ @new_resource.ping_path }") : nil
+        @current_resource.ping_response != nil ? (f.puts "ping.response = #{ @new_resource.ping_response }") : nil
+
+        f.puts "###### Logging"
+        @current_resource.access_format != nil ? (f.puts "access.format = #{ @new_resource.access_format }".gsub! '\\', '') : nil
+        @current_resource.request_slowlog_timeout != nil ? (f.puts "request_slowlog_timeout = #{ @new_resource.request_slowlog_timeout }") : nil
+        @current_resource.request_terminate_timeout != nil ? (f.puts "request_terminate_timeout = #{ @new_resource.request_terminate_timeout }") : nil
+        @current_resource.access_log != nil ? (f.puts "access.log = #{ @new_resource.access_log }") : nil
+        @current_resource.slow_log != nil ? (f.puts "slowlog = #{ @new_resource.slow_log }") : nil
+
+        f.puts "###### Misc"
+        @current_resource.chdir != nil ? (f.puts "chdir = #{ @new_resource.chdir }") : nil
+        @current_resource.chroot != nil ? (f.puts "chroot = #{ @new_resource.chroot }") : nil
+        @current_resource.catch_workers_output != nil ? (f.puts "catch_workers_output = #{ @new_resource.catch_workers_output }") : nil
+        @current_resource.security_limit_extensions != nil ? (f.puts "security.limit_extensions = #{ @new_resource.security_limit_extensions }") : nil
+        @current_resource.rlimit_files != nil ? (f.puts "rlimit_files = #{ @new_resource.rlimit_files }") : nil
+        @current_resource.rlimit_core != nil ? (f.puts "rlimit_core = #{ @new_resource.rlimit_core }") : nil
 
     end
 
@@ -179,24 +219,23 @@ def modify_file
     file_name = "#{ node[:php_fpm][:pools_path] }/#{ @current_resource.pool_name }.conf"
 
     #Start base configuration
-    find_replace(file_name,"user =",@current_resource.pool_user,@new_resource.pool_user)
-    find_replace(file_name,"group =",@current_resource.pool_group,@new_resource.pool_group)
+    find_replace(file_name,"user = ",@current_resource.pool_user,@new_resource.pool_user)
+    find_replace(file_name,"group = ",@current_resource.pool_group,@new_resource.pool_group)
 
     #Replace IP address and port
     if @current_resource.listen_address != @new_resource.listen_address || @current_resource.listen_port != @new_resource.listen_port
-        find_replace(file_name,@current_resource.listen_address,@new_resource.listen_address)
-        find_replace(file_name,@current_resource.listen_port,@new_resource.listen_port)
+        find_replace(file_name,"listen = ","#{ @current_resource.listen_address }:#{ @current_resource.listen_port }","#{ @new_resource.listen_address }:#{ @new_resource.listen_port }")
     end
 
     #Start PM configuration
-    find_replace(file_name,"pm =",@current_resource.pm,@new_resource.pm)
-    find_replace(file_name,"pm.max_children =",@current_resource.pm_max_children,@new_resource.pm_max_children)
-    find_replace(file_name,"pm.start_servers =",@current_resource.pm_start_servers,@new_resource.pm_start_servers)
-    find_replace(file_name,"pm.min_spare_servers =",@current_resource.pm_min_spare_servers,@new_resource.pm_min_spare_servers)
-    find_replace(file_name,"pm.max_spare_servers =",@current_resource.pm_max_spare_servers,@new_resource.pm_max_spare_servers)
-    find_replace(file_name,"pm.process_idle_timeout =",@current_resource.pm_process_idle_timeout,@new_resource.pm_process_idle_timeout)
-    find_replace(file_name,"pm.max_requests =",@current_resource.pm_max_requests,@new_resource.pm_max_requests)
-    find_replace(file_name,"pm.status_path =",@current_resource.pm_status_path,@new_resource.pm_status_path)
+    find_replace(file_name,"pm = ",@current_resource.pm,@new_resource.pm)
+    find_replace(file_name,"pm.max_children = ",@current_resource.pm_max_children,@new_resource.pm_max_children)
+    find_replace(file_name,"pm.start_servers = ",@current_resource.pm_start_servers,@new_resource.pm_start_servers)
+    find_replace(file_name,"pm.min_spare_servers = ",@current_resource.pm_min_spare_servers,@new_resource.pm_min_spare_servers)
+    find_replace(file_name,"pm.max_spare_servers = ",@current_resource.pm_max_spare_servers,@new_resource.pm_max_spare_servers)
+    find_replace(file_name,"pm.process_idle_timeout = ",@current_resource.pm_process_idle_timeout,@new_resource.pm_process_idle_timeout)
+    find_replace(file_name,"pm.max_requests = ",@current_resource.pm_max_requests,@new_resource.pm_max_requests)
+    find_replace(file_name,"pm.status_path = ",@current_resource.pm_status_path,@new_resource.pm_status_path)
 
 end
 
@@ -209,12 +248,12 @@ def configuration_exists(conf_line,find_str)
 end
 
 #method for finding and replacing the configuration values
-def find_replace(file_name,find_str,replace_str)
+def find_replace(file_name,attribute,find_str,replace_str)
 
     if find_str != replace_str
         #if the string is found, replace
         Chef::Log.debug "Line in #{ file_name } - #{ find_str } does not match desired configuration, updating with #{ replace_str }"
-        ::File.write(f = "#{ file_name }", ::File.read(f).gsub("#{ find_str }","#{ replace_str }"))
+        ::File.write(f = "#{ file_name }", ::File.read(f).gsub("#{ attribute }#{ find_str }","#{ attribute }#{ replace_str }"))
     end
 
 end

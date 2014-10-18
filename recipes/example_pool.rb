@@ -13,16 +13,16 @@
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
 php5_fpm_pool "test" do
+	listen_address "127.0.0.1"
+	listen_port 8080
 	overwrite true
 	action :create
 	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
 end
 
 php5_fpm_pool "test" do
-	pool_user "testing_user"
-	pool_group "testing_pool"
-	listen_address "10.10.10.10"
-	listen_port 8080
+	pool_user "fpm_user"
+	pool_group "fpm_group"
 	overwrite true
 	action :modify
 	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
