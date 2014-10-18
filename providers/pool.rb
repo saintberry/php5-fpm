@@ -38,6 +38,23 @@ action :modify do
 
 end
 
+#action delete
+action :delete do
+
+    #must make sure the file exists
+    if @current_resource.exists
+        #if so, converge by modifying the file
+        converge_by("Deleting #{ @new_resource }") do
+            delete_file
+        end
+
+    else
+        #otherwise alert
+        Chef::Log.info "#{ @new_resource } does not exist. Please create first with action :create"
+    end
+
+end
+
 #must load current resource state
 def load_current_resource
     @current_resource = Chef::Resource::Php5FpmPool.new(@new_resource.name)
@@ -89,16 +106,17 @@ def load_current_resource
             #loop through each line
             fobj.each_line do |fline|
 
-                #Split the line for configuration attribute and value
+                #Split the line for configuration value
                 lstring = fline.split('=').at(1)
-                lattr = fline.split('=').at(0)
 
                 #Start base configuration
-                configuration_exists(lattr,"user") ? @current_resource.pool_user(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"group") ? @current_resource.pool_group(lstring.chomp.strip) : nil
+                configuration_exists(fline,"user =") ? @current_resource.pool_user(lstring.chomp.strip) : nil
+                if configuration_exists(fline,"group =") && !configuration_exists(fline,"listen.group =")
+                    @current_resource.pool_group(lstring.chomp.strip)
+                end
 
                 #Pull address and port
-                if configuration_exists(lattr,"listen")
+                if configuration_exists(fline,"listen =")
                     #split away the address and port
                     sp_address = lstring.split(':').at(0)
                     sp_port = lstring.split(':').at(1)
@@ -108,39 +126,39 @@ def load_current_resource
                 end
 
                 #Finish out base configuration options
-                configuration_exists(lattr,"listen.allowed_clients") ? @current_resource.listen_allowed_clients(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"listen.owner") ? @current_resource.listen_owner(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"listen.group") ? @current_resource.listen_group(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"listen.mode") ? @current_resource.listen_mode(lstring.chomp.strip) : nil
+                configuration_exists(fline,"listen.allowed_clients =") ? @current_resource.listen_allowed_clients(lstring.chomp.strip) : nil
+                configuration_exists(fline,"listen.owner =") ? @current_resource.listen_owner(lstring.chomp.strip) : nil
+                configuration_exists(fline,"listen.group =") ? @current_resource.listen_group(lstring.chomp.strip) : nil
+                configuration_exists(fline,"listen.mode =") ? @current_resource.listen_mode(lstring.chomp.strip) : nil
 
                 #Start PM configuration
-                configuration_exists(lattr,"pm =") ? @current_resource.pm(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"pm.max_children") ? @current_resource.pm_max_children(lstring.chomp.strip.to_i) : nil
-                configuration_exists(lattr,"pm.start_servers") ? @current_resource.pm_start_servers(lstring.chomp.strip.to_i) : nil
-                configuration_exists(lattr,"pm.min_spare_servers") ? @current_resource.pm_min_spare_servers(lstring.chomp.strip.to_i) : nil
-                configuration_exists(lattr,"pm.max_spare_servers") ? @current_resource.pm_max_spare_servers(lstring.chomp.strip.to_i) : nil
-                configuration_exists(lattr,"pm.process_idle_timeout") ? @current_resource.pm_process_idle_timeout(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"pm.max_requests") ? @current_resource.pm_max_requests(lstring.chomp.strip.to_i) : nil
-                configuration_exists(lattr,"pm.status_path") ? @current_resource.pm_status_path(lstring.chomp.strip) : nil
+                configuration_exists(fline,"pm =") ? @current_resource.pm(lstring.chomp.strip) : nil
+                configuration_exists(fline,"pm.max_children =") ? @current_resource.pm_max_children(lstring.chomp.strip.to_i) : nil
+                configuration_exists(fline,"pm.start_servers =") ? @current_resource.pm_start_servers(lstring.chomp.strip.to_i) : nil
+                configuration_exists(fline,"pm.min_spare_servers =") ? @current_resource.pm_min_spare_servers(lstring.chomp.strip.to_i) : nil
+                configuration_exists(fline,"pm.max_spare_servers =") ? @current_resource.pm_max_spare_servers(lstring.chomp.strip.to_i) : nil
+                configuration_exists(fline,"pm.process_idle_timeout =") ? @current_resource.pm_process_idle_timeout(lstring.chomp.strip) : nil
+                configuration_exists(fline,"pm.max_requests =") ? @current_resource.pm_max_requests(lstring.chomp.strip.to_i) : nil
+                configuration_exists(fline,"pm.status_path =") ? @current_resource.pm_status_path(lstring.chomp.strip) : nil
 
                 #Start ping status
-                configuration_exists(lattr,"ping.path") ? @current_resource.ping_path(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"ping.response") ? @current_resource.ping_response(lstring.chomp.strip) : nil
+                configuration_exists(fline,"ping.path =") ? @current_resource.ping_path(lstring.chomp.strip) : nil
+                configuration_exists(fline,"ping.response =") ? @current_resource.ping_response(lstring.chomp.strip) : nil
 
                 #Start logging
-                configuration_exists(lattr,"access.format") ? @current_resource.access_format(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"request_slowlog_timeout") ? @current_resource.request_slowlog_timeout(lstring.chomp.strip.to_i) : nil
-                configuration_exists(lattr,"request_terminate_timeout") ? @current_resource.request_terminate_timeout(lstring.chomp.strip.to_i) : nil
-                configuration_exists(lattr,"access.log") ? @current_resource.access_log(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"slowlog") ? @current_resource.slow_log(lstring.chomp.strip) : nil
+                configuration_exists(fline,"access.format =") ? @current_resource.access_format(lstring.chomp.strip) : nil
+                configuration_exists(fline,"request_slowlog_timeout =") ? @current_resource.request_slowlog_timeout(lstring.chomp.strip.to_i) : nil
+                configuration_exists(fline,"request_terminate_timeout =") ? @current_resource.request_terminate_timeout(lstring.chomp.strip.to_i) : nil
+                configuration_exists(fline,"access.log =") ? @current_resource.access_log(lstring.chomp.strip) : nil
+                configuration_exists(fline,"slowlog =") ? @current_resource.slow_log(lstring.chomp.strip) : nil
 
                 #Start misc
-                configuration_exists(lattr,"chdir") ? @current_resource.chdir(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"chroot") ? @current_resource.chroot(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"catch_workers_output") ? @current_resource.catch_workers_output(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"security.limit_extensions") ? @current_resource.security_limit_extensions(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"rlimit_files") ? @current_resource.rlimit_files(lstring.chomp.strip) : nil
-                configuration_exists(lattr,"rlimit_core") ? @current_resource.rlimit_core(lstring.chomp.strip) : nil
+                configuration_exists(fline,"chdir =") ? @current_resource.chdir(lstring.chomp.strip) : nil
+                configuration_exists(fline,"chroot =") ? @current_resource.chroot(lstring.chomp.strip) : nil
+                configuration_exists(fline,"catch_workers_output =") ? @current_resource.catch_workers_output(lstring.chomp.strip) : nil
+                configuration_exists(fline,"security.limit_extensions =") ? @current_resource.security_limit_extensions(lstring.chomp.strip) : nil
+                configuration_exists(fline,"rlimit_files =") ? @current_resource.rlimit_files(lstring.chomp.strip) : nil
+                configuration_exists(fline,"rlimit_core =") ? @current_resource.rlimit_core(lstring.chomp.strip) : nil
 
             end
 
@@ -218,14 +236,19 @@ def modify_file
 
     file_name = "#{ node[:php_fpm][:pools_path] }/#{ @current_resource.pool_name }.conf"
 
-    #Start base configuration
+    #Start Base Configuration
     find_replace(file_name,"user = ",@current_resource.pool_user,@new_resource.pool_user)
     find_replace(file_name,"group = ",@current_resource.pool_group,@new_resource.pool_group)
 
-    #Replace IP address and port
+    #Replace IP Address and Port
     if @current_resource.listen_address != @new_resource.listen_address || @current_resource.listen_port != @new_resource.listen_port
         find_replace(file_name,"listen = ","#{ @current_resource.listen_address }:#{ @current_resource.listen_port }","#{ @new_resource.listen_address }:#{ @new_resource.listen_port }")
     end
+
+    find_replace(file_name,"listen.allowed_clients = ",@current_resource.listen_allowed_clients,@new_resource.listen_allowed_clients)
+    find_replace(file_name,"listen.owner = ",@current_resource.listen_owner,@new_resource.listen_owner)
+    find_replace(file_name,"listen.group = ",@current_resource.listen_group,@new_resource.listen_group)
+    find_replace(file_name,"listen.mode = ",@current_resource.listen_mode,@new_resource.listen_mode)
 
     #Start PM configuration
     find_replace(file_name,"pm = ",@current_resource.pm,@new_resource.pm)
@@ -236,6 +259,21 @@ def modify_file
     find_replace(file_name,"pm.process_idle_timeout = ",@current_resource.pm_process_idle_timeout,@new_resource.pm_process_idle_timeout)
     find_replace(file_name,"pm.max_requests = ",@current_resource.pm_max_requests,@new_resource.pm_max_requests)
     find_replace(file_name,"pm.status_path = ",@current_resource.pm_status_path,@new_resource.pm_status_path)
+
+    #Start Logging
+    find_replace(file_name,"access.format = ",@current_resource.access_format,@new_resource.access_format.gsub("\\",""))
+    find_replace(file_name,"request_slowlog_timeout = ",@current_resource.request_slowlog_timeout,@new_resource.request_slowlog_timeout)
+    find_replace(file_name,"request_terminate_timeout = ",@current_resource.request_terminate_timeout,@new_resource.request_terminate_timeout)
+    find_replace(file_name,"access.log = ",@current_resource.access_log,@new_resource.access_log)
+    find_replace(file_name,"slowlog = ",@current_resource.slow_log,@new_resource.slow_log)
+
+    #Start Misc
+    find_replace(file_name,"chdir = ",@current_resource.chdir,@new_resource.chdir)
+    find_replace(file_name,"chroot = ",@current_resource.chroot,@new_resource.chroot)
+    find_replace(file_name,"catch_workers_output = ",@current_resource.catch_workers_output,@new_resource.catch_workers_output)
+    find_replace(file_name,"security.limit_extensions = ",@current_resource.security_limit_extensions,@new_resource.security_limit_extensions)
+    find_replace(file_name,"rlimit_files = ",@current_resource.rlimit_files,@new_resource.rlimit_files)
+    find_replace(file_name,"rlimit_core = ",@current_resource.rlimit_core,@new_resource.rlimit_core)
 
 end
 
@@ -266,3 +304,6 @@ def file_exists?(name)
     ::File.file?("#{ node[:php_fpm][:pools_path] }/#{ name }.conf")
 
 end
+
+
+
