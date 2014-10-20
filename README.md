@@ -1,10 +1,8 @@
 php5-fpm Cookbook
 ================
-This PHP5-FPM Cookbook allows for installation of PHP-FPM, configuration of users and directories, base configuration, and pool configuration.  The attributes file gives full control over the configration for all pools and PHP-FPM configuration with JSON.
+Adding pools can be done by way of LWRP provider or by modifying JSON directly in the attributes file or overriding the attributes through other methods, environments, roles, etc.  Usage of the receipes beyond ::install is optional and not needed if using the LWRP provider.
 
-Adding pools can be done by modifying the JSON directly in the attributes file or overriding the attributes through other methods, environments, roles, etc.
-
-If you do not wish to use a configuration value, you can simply set it to NOT_SET and it will not be included in the confiruation file.  Additionally, you can add more configuration values if they are missing, future proofing the template generation.
+When using the JSON option with recipes, if you do not wish to use a configuration value in the JSON attributes, you can simply set it to NOT_SET and it will not be included in the configuration file.  Additionally, you can add more configuration values if they are missing, future proofing the template generation with JSON.
 
 Supported Platforms
 ------------
@@ -23,43 +21,8 @@ Fedora 20
 Planned Improvements
 ---------
 
-0.2.3 - Add environment variables. Add additional OS support.
+0.3.1 - Expand on LWRP for Environment Variables
 ____
-
-0.3.0 - Develop LWRP for Pool Add/Modify/Remove
-____
-
-Changelog
----------
-
-0.1.0
------
-- stajkowski - Intial Commit/Base Recipes.
-
-0.1.3
------
-- stajkowski - Rework attribute structure, prepare for additional platforms.
-
-- - -
-
-0.2.0
------
-- stajkowski - Added Redhat and CentOS support.  Allow for the option to update package repos on the system.
-
-- - -
-
-0.2.1
------
-- stajkowski - Tested Fedora 20 support.  Generated Test Kitchen files and preparing for kitchen scripts.
-
-- - -
-
-0.2.2
------
-- stajkowski - Updated install receipe to fix the update/upgrade operation.  Now allows for the option and fully functional. Added and tested against more platforms, check .kitchen.yml.  Fixed 14.04 bug for service provider, will include this until the bug is fixed.  Added support for Debian 6.x and above and added support for Ubuntu 10.04 and above, this has a seperate JSON configuration due to recent configuration settings not supported in these earlier versions.
-
-- - -
-
 
 
 Attributes
@@ -130,8 +93,97 @@ Attributes
 </table>
 
 
+Resource/Provider
+-----------------
 
-Usage
+php5_fpm_pool
+-----
+
+Actions
+---
+
+:create
+:modify
+:delete
+
+Attribute Parameters
+---
+
+```
+:overwrite, :kind_of => [ TrueClass, FalseClass ], :default => false
+:pool_name, :name_=> true, :kind_of => String, :required => true
+:pool_user, :kind_of => String, :required => false, :default => 'www-data'
+:pool_group, :kind_of => String, :required => false, :default => 'www-data'
+:listen_address, :kind_of => String, :required => false, :default => '127.0.0.1', :regex => Resolv::IPv4::Regex
+:listen_port, :kind_of => Integer, :required => false, :default => 9000
+:listen_allowed_clients, :kind_of => String, :required=> false, :default => nil
+:listen_owner, :kind_of => String, :required=> false, :default => nil
+:listen_group, :kind_of => String, :required=> false, :default => nil
+:listen_mode, :kind_of => String, :required=> false, :default => nil
+:pm, :kind_of => String, :required => false, :default => 'dynamic'
+:pm_max_children, :kind_of => Integer, :required => false, :default => 10
+:pm_start_servers, :kind_of => Integer, :required => false, :default => 4
+:pm_min_spare_servers, :kind_of => Integer, :required => false, :default => 2
+:pm_max_spare_servers, :kind_of => Integer, :required => false, :default => 6
+:pm_process_idle_timeout, :kind_of => String, :required => false, :default => '10s'
+:pm_max_requests, :kind_of => Integer, :required => false, :default => 0
+:pm_status_path, :kind_of => String, :required => false, :default => '/status'
+:ping_path, :kind_of => String, :required => false, :default => '/ping'
+:ping_response, :kind_of => String, :required => false, :default => '/pong'
+:access_format, :kind_of => String, :required => false, :default => '%R - %u %t \"%m %r\" %s'
+:request_slowlog_timeout, :kind_of => Integer, :required => false, :default => 0
+:request_terminate_timeout, :kind_of => Integer, :required => false, :default => 0
+:access_log, :kind_of => String, :required => false, :default => nil
+:slow_log, :kind_of => String, :required => false, :default => nil
+:chdir, :kind_of => String, :required => false, :default => '/'
+:chroot, :kind_of => String, :required => false, :default => nil
+:catch_workers_output, :kind_of => String, :required => false, :equal_to => ['yes', 'no'], :default => 'no'
+:security_limit_extensions, :kind_of => String, :required => false, :default => '.php'
+:rlimit_files, :kind_of => Integer, :required => false, :default => nil
+:rlimit_core, :kind_of => Integer, :required => false, :default => nil
+```
+
+Example
+---
+
+```
+php5_fpm_pool "example" do
+  pool_user "www-data"
+  pool_group "www-data"
+  listen_address "127.0.0.1"
+  listen_port 8000
+  listen_allowed_clients "127.0.0.1"
+  listen_owner "nobody"
+  listen_group "nobody"
+  listen_mode "0666"
+  overwrite true
+  action :create
+  notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
+end
+```
+
+```
+php5_fpm_pool "example" do
+  pool_user "fpm_user"
+  pool_group "fpm_group"
+  listen_allowed_clients "127.0.0.1"
+  pm_max_children 25
+  pm_start_servers 10
+  pm_min_spare_servers 5
+  pm_max_spare_servers 10
+  pm_process_idle_timeout "20s"
+  pm_max_requests 1000
+  pm_status_path "/mystatus"
+  ping_path "/myping"
+  ping_response "/myresponse"
+  overwrite true
+  action :modify
+  notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
+end
+```
+
+
+Recipe Usage
 -----
 #### php-fpm::install
 
@@ -190,3 +242,17 @@ This will replace the php-fpm.conf file based on JSON configuration. Include `ph
 License and Authors
 -------------------
 Authors: Brian Stajkowski
+
+Copyright 2014 Brian Stajkowski
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

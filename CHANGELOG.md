@@ -28,3 +28,9 @@ php5-fpm CHANGELOG
 - stajkowski - Updated install receipe to fix the update/upgrade operation.  Now allows for the option and fully functional. Added and tested against more platforms, check .kitchen.yml.  Fixed 14.04 bug for service provider, will include this until the bug is fixed.  Added support for Debian 6.x and above and added support for Ubuntu 10.04 and above, this has a seperate JSON configuration due to recent configuration settings not supported in these earlier versions.
 
 - - -
+
+0.3.0
+-----
+- stajkowski - Created LWRP for pool create, modify and delete.  LWRP example receipe shows the potential usage.  The documentation outlines all available attributes.  Tested and verified.
+
+- - -

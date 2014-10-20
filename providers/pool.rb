@@ -195,7 +195,7 @@ def create_file
         @current_resource.pm_start_servers != nil ? (f.puts "pm.start_servers = #{ @new_resource.pm_start_servers }") : nil
         @current_resource.pm_min_spare_servers != nil ? (f.puts "pm.min_spare_servers = #{ @new_resource.pm_min_spare_servers }") : nil
         @current_resource.pm_max_spare_servers != nil ? (f.puts "pm.max_spare_servers = #{ @new_resource.pm_max_spare_servers }") : nil
-        @current_resource.pm_process_idle_timeout != nil ? (f.puts "pm.process_idle_timeout = #{ @new_resource.pm_process_idle_timeout }") : nil
+        @current_resource.pm_process_idle_timeout != nil && !node[:platform_version].include?("10.04") ? (f.puts "pm.process_idle_timeout = #{ @new_resource.pm_process_idle_timeout }") : nil
         @current_resource.pm_max_requests != nil ? (f.puts "pm.max_requests = #{ @new_resource.pm_max_requests }") : nil
         @current_resource.pm_status_path != nil ? (f.puts "pm.status_path = #{ @new_resource.pm_status_path }") : nil
 
@@ -204,7 +204,7 @@ def create_file
         @current_resource.ping_response != nil ? (f.puts "ping.response = #{ @new_resource.ping_response }") : nil
 
         f.puts "###### Logging"
-        @current_resource.access_format != nil ? (f.puts "access.format = #{ @new_resource.access_format }".gsub! '\\', '') : nil
+        @current_resource.access_format != nil && !node[:platform_version].include?("10.04") ? (f.puts "access.format = #{ @new_resource.access_format }".gsub! '\\', '') : nil
         @current_resource.request_slowlog_timeout != nil ? (f.puts "request_slowlog_timeout = #{ @new_resource.request_slowlog_timeout }") : nil
         @current_resource.request_terminate_timeout != nil ? (f.puts "request_terminate_timeout = #{ @new_resource.request_terminate_timeout }") : nil
         @current_resource.access_log != nil ? (f.puts "access.log = #{ @new_resource.access_log }") : nil
@@ -214,7 +214,7 @@ def create_file
         @current_resource.chdir != nil ? (f.puts "chdir = #{ @new_resource.chdir }") : nil
         @current_resource.chroot != nil ? (f.puts "chroot = #{ @new_resource.chroot }") : nil
         @current_resource.catch_workers_output != nil ? (f.puts "catch_workers_output = #{ @new_resource.catch_workers_output }") : nil
-        @current_resource.security_limit_extensions != nil ? (f.puts "security.limit_extensions = #{ @new_resource.security_limit_extensions }") : nil
+        @current_resource.security_limit_extensions != nil && !node[:platform_version].include?("10.04") ? (f.puts "security.limit_extensions = #{ @new_resource.security_limit_extensions }") : nil
         @current_resource.rlimit_files != nil ? (f.puts "rlimit_files = #{ @new_resource.rlimit_files }") : nil
         @current_resource.rlimit_core != nil ? (f.puts "rlimit_core = #{ @new_resource.rlimit_core }") : nil
 
@@ -259,6 +259,10 @@ def modify_file
     find_replace(file_name,"pm.process_idle_timeout = ",@current_resource.pm_process_idle_timeout,@new_resource.pm_process_idle_timeout)
     find_replace(file_name,"pm.max_requests = ",@current_resource.pm_max_requests,@new_resource.pm_max_requests)
     find_replace(file_name,"pm.status_path = ",@current_resource.pm_status_path,@new_resource.pm_status_path)
+
+    #Start Ping
+    find_replace(file_name,"ping.path = ",@current_resource.ping_path,@new_resource.ping_path)
+    find_replace(file_name,"ping.response = ",@current_resource.ping_response,@new_resource.ping_response)
 
     #Start Logging
     find_replace(file_name,"access.format = ",@current_resource.access_format,@new_resource.access_format.gsub("\\",""))
