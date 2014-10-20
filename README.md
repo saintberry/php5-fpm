@@ -1,11 +1,11 @@
-php5-fpm Cookbook
-================
+# php5-fpm Cookbook
+___
 Adding pools can be done by way of LWRP provider or by modifying JSON directly in the attributes file or overriding the attributes through other methods, environments, roles, etc.  Usage of the receipes beyond ::install is optional and not needed if using the LWRP provider.
 
 When using the JSON option with recipes, if you do not wish to use a configuration value in the JSON attributes, you can simply set it to NOT_SET and it will not be included in the configuration file.  Additionally, you can add more configuration values if they are missing, future proofing the template generation with JSON.
 
-Supported Platforms
-------------
+## Supported Platforms
+
 Debian(6.x+), Ubuntu(10.04+)
 CentOS(6.x+), RedHat, Fedora(20+)
 
@@ -18,17 +18,15 @@ Ubuntu 10.04 and above
 CenOS 6.x and above
 Fedora 20
 
-Planned Improvements
----------
+## Planned Improvements
 
 0.3.1 - Expand on LWRP for Environment Variables
 ____
 
 
-Attributes
-----------
-
-#### php5-fpm::default
+## Attributes
+___
+### php5-fpm::default
 <table>
   <tr>
     <th>Key</th>
@@ -93,21 +91,17 @@ Attributes
 </table>
 
 
-Resource/Provider
------------------
+## Resource/Provider
+___
+### php5_fpm_pool
 
-php5_fpm_pool
------
-
-Actions
----
+#### Actions
 
 :create
 :modify
 :delete
 
-Attribute Parameters
----
+#### Attribute Parameters
 
 ```
 :overwrite, :kind_of => [ TrueClass, FalseClass ], :default => false
@@ -143,8 +137,7 @@ Attribute Parameters
 :rlimit_core, :kind_of => Integer, :required => false, :default => nil
 ```
 
-Example
----
+#### Example
 
 ```
 php5_fpm_pool "example" do
@@ -183,9 +176,9 @@ end
 ```
 
 
-Recipe Usage
------
-#### php-fpm::install
+## Recipe Usage
+
+### php-fpm::install
 
 Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
 
@@ -198,7 +191,7 @@ Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
 }
 ```
 
-#### php5-fpm::create_user
+### php5-fpm::create_user
 
 This will create users and directories for use with pools. Include `php5-fpm::create_user` in your node's `run_list`:
 
@@ -211,7 +204,7 @@ This will create users and directories for use with pools. Include `php5-fpm::cr
 }
 ```
 
-#### php5-fpm::configure_pools
+### php5-fpm::configure_pools
 
 This will create pools based on JSON configuration. Include `php5-fpm::configure_pools` in your node's `run_list`:
 
@@ -224,7 +217,7 @@ This will create pools based on JSON configuration. Include `php5-fpm::configure
 }
 ```
 
-#### php5-fpm::configure_fpm
+### php5-fpm::configure_fpm
 
 This will replace the php-fpm.conf file based on JSON configuration. Include `php5-fpm::configure_fpm` in your node's `run_list`:
 
@@ -239,8 +232,8 @@ This will replace the php-fpm.conf file based on JSON configuration. Include `ph
 
 
 
-License and Authors
--------------------
+## License and Authors
+___
 Authors: Brian Stajkowski
 
 Copyright 2014 Brian Stajkowski
