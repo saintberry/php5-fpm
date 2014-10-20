@@ -99,9 +99,9 @@ ___
 
 ##### Actions
 
-:create
-:modify
-:delete
+1. :create
+2. :modify
+3. :delete
 
 ##### Attribute Parameters
 
