@@ -4,7 +4,7 @@ Adding pools can be done by way of LWRP provider or by modifying JSON directly i
 
 When using the JSON option with recipes, if you do not wish to use a configuration value in the JSON attributes, you can simply set it to NOT_SET and it will not be included in the configuration file.  Additionally, you can add more configuration values if they are missing, future proofing the template generation with JSON.
 
-## Supported Platforms
+#### Supported Platforms
 
 Debian(6.x+), Ubuntu(10.04+)
 CentOS(6.x+), RedHat, Fedora(20+)
@@ -18,10 +18,10 @@ Ubuntu 10.04 and above
 CenOS 6.x and above
 Fedora 20
 
-## Planned Improvements
+#### Planned Improvements
 
 0.3.1 - Expand on LWRP for Environment Variables
-____
+
 
 
 ## Attributes
@@ -91,17 +91,19 @@ ___
 </table>
 
 
+
+
 ## Resource/Provider
 ___
 ### php5_fpm_pool
 
-#### Actions
+##### Actions
 
 :create
 :modify
 :delete
 
-#### Attribute Parameters
+##### Attribute Parameters
 
 ```
 :overwrite, :kind_of => [ TrueClass, FalseClass ], :default => false
@@ -137,7 +139,7 @@ ___
 :rlimit_core, :kind_of => Integer, :required => false, :default => nil
 ```
 
-#### Example
+##### Example
 
 ```
 php5_fpm_pool "example" do
@@ -176,9 +178,10 @@ end
 ```
 
 
+
 ## Recipe Usage
 
-### php-fpm::install
+#### php-fpm::install
 
 Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
 
@@ -191,7 +194,7 @@ Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
 }
 ```
 
-### php5-fpm::create_user
+#### php5-fpm::create_user
 
 This will create users and directories for use with pools. Include `php5-fpm::create_user` in your node's `run_list`:
 
@@ -204,7 +207,7 @@ This will create users and directories for use with pools. Include `php5-fpm::cr
 }
 ```
 
-### php5-fpm::configure_pools
+#### php5-fpm::configure_pools
 
 This will create pools based on JSON configuration. Include `php5-fpm::configure_pools` in your node's `run_list`:
 
@@ -217,7 +220,7 @@ This will create pools based on JSON configuration. Include `php5-fpm::configure
 }
 ```
 
-### php5-fpm::configure_fpm
+#### php5-fpm::configure_fpm
 
 This will replace the php-fpm.conf file based on JSON configuration. Include `php5-fpm::configure_fpm` in your node's `run_list`:
 
