@@ -230,6 +230,19 @@ This will replace the php-fpm.conf file based on JSON attributes.  Not needed if
   ]
 }
 ```
+
+### php5-fpm::example_pool (optional)
+
+Example on how to use the LWRP provider.  This is not a required recipe but include `php5-fpm::example_pool` in your node's `run_list` if you wish to try the example:
+
+```json
+{
+  "name":"my_node",
+  "run_list": [
+    "recipe[php5-fpm::example_pool]"
+  ]
+}
+```
 <br />
 <br />
 <br />
