@@ -34,3 +34,15 @@ php5-fpm CHANGELOG
 - stajkowski - Created LWRP for pool create, modify and delete.  LWRP example receipe shows the potential usage.  The documentation outlines all available attributes.  Tested and verified.
 
 - - -
+
+0.3.1
+-----
+- rodriguez - Adjust installation script so that it doesn't restart php-fpm everytime chef-client is run.
+
+- - -
+
+0.3.2
+-----
+- stajkowski - Revise Documentation.
+
+- - -
