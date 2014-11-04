@@ -192,7 +192,7 @@ Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
 }
 ```
 
-### php5-fpm::create_user
+### php5-fpm::create_user (optional)
 
 This will create users and directories for use with pools. Include `php5-fpm::create_user` in your node's `run_list`:
 
@@ -205,9 +205,9 @@ This will create users and directories for use with pools. Include `php5-fpm::cr
 }
 ```
 
-### php5-fpm::configure_pools
+### php5-fpm::configure_pools (optional)
 
-This will create pools based on JSON configuration. Include `php5-fpm::configure_pools` in your node's `run_list`:
+This will create pools based on JSON attributes.  Not needed if you are using the LWRP provider. Include `php5-fpm::configure_pools` in your node's `run_list`:
 
 ```json
 {
@@ -218,9 +218,9 @@ This will create pools based on JSON configuration. Include `php5-fpm::configure
 }
 ```
 
-### php5-fpm::configure_fpm
+### php5-fpm::configure_fpm (optional)
 
-This will replace the php-fpm.conf file based on JSON configuration. Include `php5-fpm::configure_fpm` in your node's `run_list`:
+This will replace the php-fpm.conf file based on JSON attributes.  Not needed if you are using the LWRP provider. Include `php5-fpm::configure_fpm` in your node's `run_list`:
 
 ```json
 {
