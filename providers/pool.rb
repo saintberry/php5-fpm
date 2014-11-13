@@ -96,6 +96,13 @@ def load_current_resource
     @current_resource.security_limit_extensions(@new_resource.security_limit_extensions)
     @current_resource.rlimit_files(@new_resource.rlimit_files)
     @current_resource.rlimit_core(@new_resource.rlimit_core)
+    #PHP INI
+    @current_resource.php_ini_values(@new_resource.php_ini_values)
+    @current_resource.php_ini_flags(@new_resource.php_ini_flags)
+    @current_resource.php_ini_admin_values(@new_resource.php_ini_admin_values)
+    @current_resource.php_ini_admin_flags(@new_resource.php_ini_admin_flags)
+    #ENV Variables
+    @current_resource.env_variables(@new_resource.env_variables)
 
     #if the file exists, load current state
     if file_exists?(@current_resource.pool_name)
@@ -160,6 +167,15 @@ def load_current_resource
                 configuration_exists(fline,"rlimit_files =") ? @current_resource.rlimit_files(lstring.chomp.strip) : nil
                 configuration_exists(fline,"rlimit_core =") ? @current_resource.rlimit_core(lstring.chomp.strip) : nil
 
+                #Start PHP INI
+                configuration_exists(fline,"php_value[") && !@current_resource.php_ini_values.nil? ? check_array_values(fline,lstring,'php_value') : nil
+                configuration_exists(fline,"php_flag[") && !@current_resource.php_ini_flags.nil? ? check_array_values(fline,lstring,'php_flag') : nil
+                configuration_exists(fline,"php_admin_value[") && !@current_resource.php_ini_admin_values.nil? ? check_array_values(fline,lstring,'php_admin_value') : nil
+                configuration_exists(fline,"php_admin_flag[") && !@current_resource.php_ini_admin_flags.nil? ? check_array_values(fline,lstring,'php_admin_flag') : nil
+
+                #Start ENV Variables
+                configuration_exists(fline,"env[") && !@current_resource.php_ini_flags.nil? ? check_array_values(fline,lstring,'env') : nil
+
             end
 
         end
@@ -217,6 +233,41 @@ def create_file
         @current_resource.security_limit_extensions != nil && !node[:platform_version].include?("10.04") ? (f.puts "security.limit_extensions = #{ @new_resource.security_limit_extensions }") : nil
         @current_resource.rlimit_files != nil ? (f.puts "rlimit_files = #{ @new_resource.rlimit_files }") : nil
         @current_resource.rlimit_core != nil ? (f.puts "rlimit_core = #{ @new_resource.rlimit_core }") : nil
+
+        f.puts "##### PHP INI Values"
+        if !@current_resource.php_ini_values.nil?
+            @current_resource.php_ini_values.each do | k, v |
+                f.puts "php_value[#{ k }] = #{ v }"
+            end
+        end
+
+        f.puts "##### PHP INI Flags"
+        if !@current_resource.php_ini_flags.nil?
+            @current_resource.php_ini_flags.each do | k, v |
+                f.puts "php_flag[#{ k }] = #{ v }"
+            end
+        end
+
+        f.puts "##### PHP INI Admin Values"
+        if !@current_resource.php_ini_admin_values.nil?
+            @current_resource.php_ini_admin_values.each do | k, v |
+                f.puts "php_admin_value[#{ k }] = #{ v }"
+            end
+        end
+
+        f.puts "##### PHP INI Admin Flags"
+        if !@current_resource.php_ini_admin_flags.nil?
+            @current_resource.php_ini_admin_flags.each do | k, v |
+                f.puts "php_admin_flag[#{ k }] = #{ v }"
+            end
+        end
+
+        f.puts "##### ENV Variables"
+        if !@current_resource.env_variables.nil?
+            @current_resource.env_variables.each do | k, v |
+                f.puts "env[#{ k }] = #{ v }"
+            end
+        end
 
     end
 
@@ -296,6 +347,57 @@ def find_replace(file_name,attribute,find_str,replace_str)
         #if the string is found, replace
         Chef::Log.debug "Line in #{ file_name } - #{ find_str } does not match desired configuration, updating with #{ replace_str }"
         ::File.write(f = "#{ file_name }", ::File.read(f).gsub("#{ attribute }#{ find_str }","#{ attribute }#{ replace_str }"))
+    end
+
+end
+
+#method for checking current array values and setting current_resource
+def check_array_values(fline,lstring,conf_type)
+
+    #Need to extract the variable name first
+    conf_file_variable = fline.scan(/\[.*?\]/).first.sub('[', '').sub(']', '')
+
+    Chef::Log.info "TEST: conf_file_variable is #{ conf_file_variable }"
+
+    #Need to state what conf hash we are checking
+    case conf_type
+        when "php_flag"
+
+            #Start replacing the current_resource with values from the file
+            @current_resource.php_ini_flags["#{conf_file_variable}"] = lstring.chomp.strip
+
+            Chef::Log.debug "Found php_ini_flag, setting to current resource php_flags[#{ conf_file_variable }]"
+
+        when "php_value"
+
+            #Start replacing the current_resource with values from the file
+            @current_resource.php_ini_values["#{conf_file_variable}"] = lstring.chomp.strip
+
+            Chef::Log.debug "Found php_ini_value, setting to current resource php_value[#{ conf_file_variable }]"
+
+        when "php_admin_flag"
+
+            #Start replacing the current_resource with values from the file
+            @current_resource.php_ini_admin_flags["#{conf_file_variable}"] = lstring.chomp.strip
+
+            Chef::Log.debug "Found php_ini_admin_flag, setting to current resource php_admin_flags[#{ conf_file_variable }]"
+
+        when "php_admin_value"
+
+            #Start replacing the current_resource with values from the file
+            @current_resource.php_ini_admin_values["#{conf_file_variable}"] = lstring.chomp.strip
+
+            Chef::Log.debug "Found php_ini_admin_value, setting to current resource php_admin_value[#{ conf_file_variable }]"
+
+        when "env"
+
+            #Start replacing the current_resource with values from the file
+            @current_resource.env_variables["#{conf_file_variable}"] = lstring.chomp.strip
+
+            Chef::Log.debug "Found env value, setting to current resource env[#{ conf_file_variable }]"
+
+        else
+            Chef::Log.info "I'm in a switch statement that shouldn't be yeilding this result: check_array_values"
     end
 
 end

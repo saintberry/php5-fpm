@@ -46,4 +46,13 @@ attribute :security_limit_extensions, :kind_of => String, :required => false, :d
 attribute :rlimit_files, :kind_of => Integer, :required => false, :default => nil
 attribute :rlimit_core, :kind_of => Integer, :required => false, :default => nil
 
+#PHP INI
+attribute :php_ini_flags, :kind_of => Hash, :required => false, :default => nil
+attribute :php_ini_values, :kind_of => Hash, :required => false, :default => nil
+attribute :php_ini_admin_flags, :kind_of => Hash, :required => false, :default => nil
+attribute :php_ini_admin_values, :kind_of => Hash, :required => false, :default => nil
+
+#ENV Variables
+attribute :env_variables, :kind_of => Hash, :required => false, :default => nil
+
 attr_accessor :exists

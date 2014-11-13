@@ -21,6 +21,12 @@ php5_fpm_pool "example" do
 	listen_owner "nobody"
 	listen_group "nobody"
 	listen_mode "0666"
+    php_ini_flags (
+                    { "display_errors" => "off", "log_errors" => "on"}
+                  )
+    php_ini_values (
+                      { "sendmail_path" => "/usr/sbin/sendmail -t -i -f www@my.domain.com", "memory_limit" => "32M"}
+                  )
 	overwrite true
 	action :create
 	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
@@ -44,16 +50,21 @@ php5_fpm_pool "example" do
 	pool_user "fpm_user"
 	pool_group "fpm_group"
 	listen_allowed_clients "127.0.0.1"
-	pm_max_children 25
+	pm_max_children 30
 	pm_start_servers 10
 	pm_min_spare_servers 5
 	pm_max_spare_servers 10
-	pm_process_idle_timeout "20s"
+	pm_process_idle_timeout "30s"
 	pm_max_requests 1000
 	pm_status_path "/mystatus"
 	ping_path "/myping"
 	ping_response "/myresponse"
-	overwrite true
+    php_ini_flags (
+                      { "display_errors" => "on", "log_errors" => "off"}
+                  )
+    php_ini_values (
+                       { "sendmail_path" => "/usr/sbin/sendmail -t -i -f www@my.yourdomain.com", "memory_limit" => "16M"}
+                   )
 	action :modify
 	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
 end
