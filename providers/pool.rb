@@ -101,6 +101,7 @@ def load_current_resource
     @current_resource.php_ini_flags(@new_resource.php_ini_flags)
     @current_resource.php_ini_admin_values(@new_resource.php_ini_admin_values)
     @current_resource.php_ini_admin_flags(@new_resource.php_ini_admin_flags)
+
     #ENV Variables
     @current_resource.env_variables(@new_resource.env_variables)
 
@@ -115,6 +116,10 @@ def load_current_resource
 
                 #Split the line for configuration value
                 lstring = fline.split('=').at(1)
+                #Get the conf variable if there is one
+                #Need to extract the variable name first
+                conf_file_variable = fline.scan(/\[.*?\]/).first
+                !conf_file_variable.nil? ? conf_file_variable = conf_file_variable.sub('[', '').sub(']', '') : nil
 
                 #Start base configuration
                 configuration_exists(fline,"user =") ? @current_resource.pool_user(lstring.chomp.strip) : nil
@@ -168,15 +173,18 @@ def load_current_resource
                 configuration_exists(fline,"rlimit_core =") ? @current_resource.rlimit_core(lstring.chomp.strip) : nil
 
                 #Start PHP INI
-                configuration_exists(fline,"php_value[") && !@current_resource.php_ini_values.nil? ? check_array_values(fline,lstring,'php_value') : nil
-                configuration_exists(fline,"php_flag[") && !@current_resource.php_ini_flags.nil? ? check_array_values(fline,lstring,'php_flag') : nil
-                configuration_exists(fline,"php_admin_value[") && !@current_resource.php_ini_admin_values.nil? ? check_array_values(fline,lstring,'php_admin_value') : nil
-                configuration_exists(fline,"php_admin_flag[") && !@current_resource.php_ini_admin_flags.nil? ? check_array_values(fline,lstring,'php_admin_flag') : nil
+                configuration_exists(fline,"php_value[#{conf_file_variable}] =") && !@current_resource.php_ini_values.nil? ? @current_resource.php_ini_values["#{conf_file_variable}"] = lstring.chomp.strip : nil
+                configuration_exists(fline,"php_flag[#{conf_file_variable}] =") && !@current_resource.php_ini_flags.nil? ? @current_resource.php_ini_flags["#{conf_file_variable}"] = lstring.chomp.strip : nil
+                configuration_exists(fline,"php_admin_value[#{conf_file_variable}] =") && !@current_resource.php_ini_admin_values.nil? ? @current_resource.php_ini_admin_values["#{conf_file_variable}"] = lstring.chomp.strip : nil
+                configuration_exists(fline,"php_admin_flag[#{conf_file_variable}] =") && !@current_resource.php_ini_admin_flags.nil? ? @current_resource.php_ini_admin_flags["#{conf_file_variable}"] = lstring.chomp.strip : nil
 
                 #Start ENV Variables
-                configuration_exists(fline,"env[") && !@current_resource.php_ini_flags.nil? ? check_array_values(fline,lstring,'env') : nil
+                configuration_exists(fline,"env[#{conf_file_variable}] =") && !@current_resource.php_ini_flags.nil? ? @current_resource.php_ini_flags["#{conf_file_variable}"] = lstring.chomp.strip : nil
 
             end
+
+            Chef::Log.info "DEBUG: THIS IS THE CURRENT RESOURCE #{ @current_resource.php_ini_values }"
+            Chef::Log.info "DEBUG: THIS IS THE NEW RESOURCE #{ @new_resource.php_ini_values }"
 
         end
 
@@ -235,36 +243,36 @@ def create_file
         @current_resource.rlimit_core != nil ? (f.puts "rlimit_core = #{ @new_resource.rlimit_core }") : nil
 
         f.puts "##### PHP INI Values"
-        if !@current_resource.php_ini_values.nil?
-            @current_resource.php_ini_values.each do | k, v |
+        if !@new_resource.php_ini_values.nil?
+            @new_resource.php_ini_values.each do | k, v |
                 f.puts "php_value[#{ k }] = #{ v }"
             end
         end
 
         f.puts "##### PHP INI Flags"
-        if !@current_resource.php_ini_flags.nil?
-            @current_resource.php_ini_flags.each do | k, v |
+        if !@new_resource.php_ini_flags.nil?
+            @new_resource.php_ini_flags.each do | k, v |
                 f.puts "php_flag[#{ k }] = #{ v }"
             end
         end
 
         f.puts "##### PHP INI Admin Values"
-        if !@current_resource.php_ini_admin_values.nil?
-            @current_resource.php_ini_admin_values.each do | k, v |
+        if !@new_resource.php_ini_admin_values.nil?
+            @new_resource.php_ini_admin_values.each do | k, v |
                 f.puts "php_admin_value[#{ k }] = #{ v }"
             end
         end
 
         f.puts "##### PHP INI Admin Flags"
-        if !@current_resource.php_ini_admin_flags.nil?
-            @current_resource.php_ini_admin_flags.each do | k, v |
+        if !@new_resource.php_ini_admin_flags.nil?
+            @new_resource.php_ini_admin_flags.each do | k, v |
                 f.puts "php_admin_flag[#{ k }] = #{ v }"
             end
         end
 
         f.puts "##### ENV Variables"
-        if !@current_resource.env_variables.nil?
-            @current_resource.env_variables.each do | k, v |
+        if !@new_resource.env_variables.nil?
+            @new_resource.env_variables.each do | k, v |
                 f.puts "env[#{ k }] = #{ v }"
             end
         end
@@ -330,6 +338,42 @@ def modify_file
     find_replace(file_name,"rlimit_files = ",@current_resource.rlimit_files,@new_resource.rlimit_files)
     find_replace(file_name,"rlimit_core = ",@current_resource.rlimit_core,@new_resource.rlimit_core)
 
+    #Start PHP INI Values
+    if !@current_resource.php_ini_values.nil?
+        @current_resource.php_ini_values.each do | k, v |
+            find_replace(file_name,"php_value[#{ k }] = ",v,@new_resource.php_ini_values["#{ k }"])
+            Chef::Log.info "DEBUG: old is #{ v } and new is #{ @new_resource.php_ini_values["#{ k }"] }"
+        end
+    end
+
+    #Start PHP INI Flags
+    if !@current_resource.php_ini_flags.nil?
+        @current_resource.php_ini_flags.each do | k, v |
+            find_replace(file_name,"php_flag[#{ k }] = ",v,@new_resource.php_ini_flags["#{ k }"])
+        end
+    end
+
+    #Start PHP INI Admin Values
+    if !@current_resource.php_ini_admin_values.nil?
+        @current_resource.php_ini_admin_values.each do | k, v |
+            find_replace(file_name,"php_admin_value[#{ k }] = ",v,@new_resource.php_ini_admin_values["#{ k }"])
+        end
+    end
+
+    #Start PHP INI Admin Flags
+    if !@current_resource.php_ini_admin_flags.nil?
+        @current_resource.php_ini_admin_flags.each do | k, v |
+            find_replace(file_name,"php_admin_flag[#{ k }] = ",v,@new_resource.php_ini_admin_flags["#{ k }"])
+        end
+    end
+
+    #Start ENV Variables
+    if !@current_resource.env_variables.nil?
+        @current_resource.env_variables.each do | k, v |
+            find_replace(file_name,"env[#{ k }] = ",v,@new_resource.env_variables["#{ k }"])
+        end
+    end
+
 end
 
 #method for finding configuration values in existing configurations
@@ -347,57 +391,6 @@ def find_replace(file_name,attribute,find_str,replace_str)
         #if the string is found, replace
         Chef::Log.debug "Line in #{ file_name } - #{ find_str } does not match desired configuration, updating with #{ replace_str }"
         ::File.write(f = "#{ file_name }", ::File.read(f).gsub("#{ attribute }#{ find_str }","#{ attribute }#{ replace_str }"))
-    end
-
-end
-
-#method for checking current array values and setting current_resource
-def check_array_values(fline,lstring,conf_type)
-
-    #Need to extract the variable name first
-    conf_file_variable = fline.scan(/\[.*?\]/).first.sub('[', '').sub(']', '')
-
-    Chef::Log.info "TEST: conf_file_variable is #{ conf_file_variable }"
-
-    #Need to state what conf hash we are checking
-    case conf_type
-        when "php_flag"
-
-            #Start replacing the current_resource with values from the file
-            @current_resource.php_ini_flags["#{conf_file_variable}"] = lstring.chomp.strip
-
-            Chef::Log.debug "Found php_ini_flag, setting to current resource php_flags[#{ conf_file_variable }]"
-
-        when "php_value"
-
-            #Start replacing the current_resource with values from the file
-            @current_resource.php_ini_values["#{conf_file_variable}"] = lstring.chomp.strip
-
-            Chef::Log.debug "Found php_ini_value, setting to current resource php_value[#{ conf_file_variable }]"
-
-        when "php_admin_flag"
-
-            #Start replacing the current_resource with values from the file
-            @current_resource.php_ini_admin_flags["#{conf_file_variable}"] = lstring.chomp.strip
-
-            Chef::Log.debug "Found php_ini_admin_flag, setting to current resource php_admin_flags[#{ conf_file_variable }]"
-
-        when "php_admin_value"
-
-            #Start replacing the current_resource with values from the file
-            @current_resource.php_ini_admin_values["#{conf_file_variable}"] = lstring.chomp.strip
-
-            Chef::Log.debug "Found php_ini_admin_value, setting to current resource php_admin_value[#{ conf_file_variable }]"
-
-        when "env"
-
-            #Start replacing the current_resource with values from the file
-            @current_resource.env_variables["#{conf_file_variable}"] = lstring.chomp.strip
-
-            Chef::Log.debug "Found env value, setting to current resource env[#{ conf_file_variable }]"
-
-        else
-            Chef::Log.info "I'm in a switch statement that shouldn't be yeilding this result: check_array_values"
     end
 
 end

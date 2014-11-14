@@ -14,7 +14,7 @@ When using the JSON option with recipes, if you do not wish to use a configurati
 >CenOS 6.x and above
 >Fedora 20
 >#### Planned Improvements
->0.3.3 - Expand on LWRP for Environment Variables and Auto Calculate Workers
+>0.3.3 - Auto Calculate Workers/Clients/ETC - Division of Resources
 
 No additional cookboks are required.
 <br />
@@ -103,37 +103,57 @@ ______
 ### Attribute Parameters
 
 ```
-:overwrite, :kind_of => [ TrueClass, FalseClass ], :default => false
-:pool_name, :name_=> true, :kind_of => String, :required => true
-:pool_user, :kind_of => String, :required => false, :default => 'www-data'
-:pool_group, :kind_of => String, :required => false, :default => 'www-data'
-:listen_address, :kind_of => String, :required => false, :default => '127.0.0.1', :regex => Resolv::IPv4::Regex
-:listen_port, :kind_of => Integer, :required => false, :default => 9000
-:listen_allowed_clients, :kind_of => String, :required=> false, :default => nil
-:listen_owner, :kind_of => String, :required=> false, :default => nil
-:listen_group, :kind_of => String, :required=> false, :default => nil
-:listen_mode, :kind_of => String, :required=> false, :default => nil
-:pm, :kind_of => String, :required => false, :default => 'dynamic'
-:pm_max_children, :kind_of => Integer, :required => false, :default => 10
-:pm_start_servers, :kind_of => Integer, :required => false, :default => 4
-:pm_min_spare_servers, :kind_of => Integer, :required => false, :default => 2
-:pm_max_spare_servers, :kind_of => Integer, :required => false, :default => 6
-:pm_process_idle_timeout, :kind_of => String, :required => false, :default => '10s'
-:pm_max_requests, :kind_of => Integer, :required => false, :default => 0
-:pm_status_path, :kind_of => String, :required => false, :default => '/status'
-:ping_path, :kind_of => String, :required => false, :default => '/ping'
-:ping_response, :kind_of => String, :required => false, :default => '/pong'
-:access_format, :kind_of => String, :required => false, :default => '%R - %u %t \"%m %r\" %s'
-:request_slowlog_timeout, :kind_of => Integer, :required => false, :default => 0
-:request_terminate_timeout, :kind_of => Integer, :required => false, :default => 0
-:access_log, :kind_of => String, :required => false, :default => nil
-:slow_log, :kind_of => String, :required => false, :default => nil
-:chdir, :kind_of => String, :required => false, :default => '/'
-:chroot, :kind_of => String, :required => false, :default => nil
-:catch_workers_output, :kind_of => String, :required => false, :equal_to => ['yes', 'no'], :default => 'no'
-:security_limit_extensions, :kind_of => String, :required => false, :default => '.php'
-:rlimit_files, :kind_of => Integer, :required => false, :default => nil
-:rlimit_core, :kind_of => Integer, :required => false, :default => nil
+#Overwrite for file replacement
+attribute :overwrite, :kind_of => [ TrueClass, FalseClass ], :default => false
+
+#Base Pool Configuration
+attribute :pool_name, :name_attribute => true, :kind_of => String, :required => true
+attribute :pool_user, :kind_of => String, :required => false, :default => 'www-data'
+attribute :pool_group, :kind_of => String, :required => false, :default => 'www-data'
+attribute :listen_address, :kind_of => String, :required => false, :default => '127.0.0.1', :regex => Resolv::IPv4::Regex
+attribute :listen_port, :kind_of => Integer, :required => false, :default => 9000
+attribute :listen_allowed_clients, :kind_of => String, :required=> false, :default => nil
+attribute :listen_owner, :kind_of => String, :required=> false, :default => nil
+attribute :listen_group, :kind_of => String, :required=> false, :default => nil
+attribute :listen_mode, :kind_of => String, :required=> false, :default => nil
+
+#PM Configuration
+attribute :pm, :kind_of => String, :required => false, :default => 'dynamic'
+attribute :pm_max_children, :kind_of => Integer, :required => false, :default => 10
+attribute :pm_start_servers, :kind_of => Integer, :required => false, :default => 4
+attribute :pm_min_spare_servers, :kind_of => Integer, :required => false, :default => 2
+attribute :pm_max_spare_servers, :kind_of => Integer, :required => false, :default => 6
+attribute :pm_process_idle_timeout, :kind_of => String, :required => false, :default => '10s'
+attribute :pm_max_requests, :kind_of => Integer, :required => false, :default => 0
+attribute :pm_status_path, :kind_of => String, :required => false, :default => '/status'
+
+#Ping Status
+attribute :ping_path, :kind_of => String, :required => false, :default => '/ping'
+attribute :ping_response, :kind_of => String, :required => false, :default => '/pong'
+
+#Logging
+attribute :access_format, :kind_of => String, :required => false, :default => '%R - %u %t \"%m %r\" %s'
+attribute :request_slowlog_timeout, :kind_of => Integer, :required => false, :default => 0
+attribute :request_terminate_timeout, :kind_of => Integer, :required => false, :default => 0
+attribute :access_log, :kind_of => String, :required => false, :default => nil
+attribute :slow_log, :kind_of => String, :required => false, :default => nil
+
+#Misc
+attribute :chdir, :kind_of => String, :required => false, :default => '/'
+attribute :chroot, :kind_of => String, :required => false, :default => nil
+attribute :catch_workers_output, :kind_of => String, :required => false, :equal_to => ['yes', 'no'], :default => 'no'
+attribute :security_limit_extensions, :kind_of => String, :required => false, :default => '.php'
+attribute :rlimit_files, :kind_of => Integer, :required => false, :default => nil
+attribute :rlimit_core, :kind_of => Integer, :required => false, :default => nil
+
+#PHP INI
+attribute :php_ini_flags, :kind_of => Hash, :required => false, :default => nil
+attribute :php_ini_values, :kind_of => Hash, :required => false, :default => nil
+attribute :php_ini_admin_flags, :kind_of => Hash, :required => false, :default => nil
+attribute :php_ini_admin_values, :kind_of => Hash, :required => false, :default => nil
+
+#ENV Variables
+attribute :env_variables, :kind_of => Hash, :required => false, :default => nil
 ```
 <br />
 <br />
