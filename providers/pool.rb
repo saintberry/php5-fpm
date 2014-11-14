@@ -108,6 +108,13 @@ def load_current_resource
     #if the file exists, load current state
     if file_exists?(@current_resource.pool_name)
 
+        #Tmp hash holding for our PHP and ENV Variables
+        tmp_flags = {}
+        tmp_values = {}
+        tmp_admin_flags = {}
+        tmp_admin_values = {}
+        tmp_env_variables = {}
+
         #open the file for read
         ::File.open("#{ node[:php_fpm][:pools_path] }/#{ @current_resource.pool_name }.conf", "r") do |fobj|
 
@@ -173,18 +180,21 @@ def load_current_resource
                 configuration_exists(fline,"rlimit_core =") ? @current_resource.rlimit_core(lstring.chomp.strip) : nil
 
                 #Start PHP INI
-                configuration_exists(fline,"php_value[#{conf_file_variable}] =") && !@current_resource.php_ini_values.nil? ? @current_resource.php_ini_values["#{conf_file_variable}"] = lstring.chomp.strip : nil
-                configuration_exists(fline,"php_flag[#{conf_file_variable}] =") && !@current_resource.php_ini_flags.nil? ? @current_resource.php_ini_flags["#{conf_file_variable}"] = lstring.chomp.strip : nil
-                configuration_exists(fline,"php_admin_value[#{conf_file_variable}] =") && !@current_resource.php_ini_admin_values.nil? ? @current_resource.php_ini_admin_values["#{conf_file_variable}"] = lstring.chomp.strip : nil
-                configuration_exists(fline,"php_admin_flag[#{conf_file_variable}] =") && !@current_resource.php_ini_admin_flags.nil? ? @current_resource.php_ini_admin_flags["#{conf_file_variable}"] = lstring.chomp.strip : nil
+                configuration_exists(fline,"php_value[#{conf_file_variable}] =") && !@current_resource.php_ini_values.nil? ? tmp_values["#{conf_file_variable}"] = lstring.chomp.strip : nil
+                configuration_exists(fline,"php_flag[#{conf_file_variable}] =") && !@current_resource.php_ini_flags.nil? ? tmp_flags["#{conf_file_variable}"] = lstring.chomp.strip : nil
+                configuration_exists(fline,"php_admin_value[#{conf_file_variable}] =") && !@current_resource.php_ini_admin_values.nil? ? tmp_admin_values["#{conf_file_variable}"] = lstring.chomp.strip : nil
+                configuration_exists(fline,"php_admin_flag[#{conf_file_variable}] =") && !@current_resource.php_ini_admin_flags.nil? ? tmp_admin_flags["#{conf_file_variable}"] = lstring.chomp.strip : nil
 
                 #Start ENV Variables
-                configuration_exists(fline,"env[#{conf_file_variable}] =") && !@current_resource.php_ini_flags.nil? ? @current_resource.php_ini_flags["#{conf_file_variable}"] = lstring.chomp.strip : nil
+                configuration_exists(fline,"env[#{conf_file_variable}] =") && !@current_resource.env_variables.nil? ? tmp_env_variables["#{conf_file_variable}"] = lstring.chomp.strip : nil
 
             end
 
-            Chef::Log.info "DEBUG: THIS IS THE CURRENT RESOURCE #{ @current_resource.php_ini_values }"
-            Chef::Log.info "DEBUG: THIS IS THE NEW RESOURCE #{ @new_resource.php_ini_values }"
+            #Reset current resource hashes on PHP and ENV Variables
+            @current_resource.php_ini_values(tmp_values)
+            @current_resource.php_ini_flags(tmp_flags)
+            @current_resource.php_ini_admin_values(tmp_admin_values)
+            @current_resource.php_ini_admin_flags(tmp_admin_flags)
 
         end
 
@@ -198,7 +208,7 @@ end
 def create_file
 
     #open the file and put new values in
-    Chef::Log.debug "Creating file #{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf!"
+    Chef::Log.debug "DEBUG: Creating file #{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf!"
     ::File.open("#{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf", "w") do |f|
 
         f.puts "[#{ @new_resource.pool_name }]"
@@ -285,7 +295,7 @@ end
 def delete_file
 
     #delete the file
-    Chef::Log.debug "Removing file #{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf!"
+    Chef::Log.debug "DEBUG: Removing file #{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf!"
     ::File.delete("#{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf")
 
 end
@@ -342,7 +352,6 @@ def modify_file
     if !@current_resource.php_ini_values.nil?
         @current_resource.php_ini_values.each do | k, v |
             find_replace(file_name,"php_value[#{ k }] = ",v,@new_resource.php_ini_values["#{ k }"])
-            Chef::Log.info "DEBUG: old is #{ v } and new is #{ @new_resource.php_ini_values["#{ k }"] }"
         end
     end
 
@@ -389,7 +398,7 @@ def find_replace(file_name,attribute,find_str,replace_str)
 
     if find_str != replace_str
         #if the string is found, replace
-        Chef::Log.debug "Line in #{ file_name } - #{ find_str } does not match desired configuration, updating with #{ replace_str }"
+        Chef::Log.debug "DEBUG: Line in #{ file_name } - #{ find_str } does not match desired configuration, updating with #{ replace_str }"
         ::File.write(f = "#{ file_name }", ::File.read(f).gsub("#{ attribute }#{ find_str }","#{ attribute }#{ replace_str }"))
     end
 
@@ -399,10 +408,7 @@ end
 def file_exists?(name)
 
     #if file exists return true
-    Chef::Log.debug "Checking to see if the curent file: '#{ name }.conf' exists in pool directory #{ node[:php_fpm][:pools_path] }"
+    Chef::Log.debug "DEBUG: Checking to see if the curent file: '#{ name }.conf' exists in pool directory #{ node[:php_fpm][:pools_path] }"
     ::File.file?("#{ node[:php_fpm][:pools_path] }/#{ name }.conf")
 
 end
-
-
-

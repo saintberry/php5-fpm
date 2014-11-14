@@ -43,6 +43,6 @@ php5-fpm CHANGELOG
 
 0.3.2
 -----
-- stajkowski - Revise Documentation.
+- stajkowski - Added PHP Overrides and Environment variables to LWRP.  Revised documentation and updated README.
 
 - - -
