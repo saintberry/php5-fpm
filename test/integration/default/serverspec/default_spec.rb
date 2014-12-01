@@ -1,14 +1,14 @@
 require 'serverspec'
 
 #################################################
-## New Version of Serverspec -- This is broken ##
+## New Version of Serverspec -- Not Needed ##
 #include SpecInfra::Helper::Exec
 #include SpecInfra::Helper::DetectOS
 #################################################
 
 set :backend, :exec
 
-if ['Debian', 'Ubuntu'].include?(os[:family])
+if ['debian', 'ubuntu'].include?(os[:family])
 
     describe package('php5-fpm') do
         it { should be_installed }
@@ -22,7 +22,7 @@ if ['Debian', 'Ubuntu'].include?(os[:family])
         it { should be_running }
     end
 
-elsif ['RedHat', 'CentOS', 'Fedora'].include?(os[:family])
+elsif ['redHat', 'centos', 'fedora'].include?(os[:family])
 
     describe package('php-fpm') do
         it { should be_installed }

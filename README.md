@@ -14,7 +14,7 @@ When using the JSON option with recipes, if you do not wish to use a configurati
 >CenOS 6.x and above
 >Fedora 20
 >#### Planned Improvements
->0.3.3 - Auto Calculate Workers/Clients/ETC - Division of Resources
+>0.3.4 - Auto Calculate Workers/Clients/ETC - Division of Resources
 
 No additional cookboks are required.
 <br />
@@ -210,7 +210,7 @@ end
 <br />
 # Recipe Usage
 
-### php-fpm::install
+### php-fpm::install (required)
 
 Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
 
@@ -219,6 +219,19 @@ Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
   "name":"my_node",
   "run_list": [
     "recipe[php5-fpm::install]"
+  ]
+}
+```
+
+### php5-fpm::configure_fpm (required)
+
+This will replace the php-fpm.conf file based on JSON attributes.  This is required. Include `php5-fpm::configure_fpm` in your node's `run_list`:
+
+```json
+{
+  "name":"my_node",
+  "run_list": [
+    "recipe[php5-fpm::configure_fpm]"
   ]
 }
 ```
@@ -245,19 +258,6 @@ This will create pools based on JSON attributes.  Not needed if you are using th
   "name":"my_node",
   "run_list": [
     "recipe[php5-fpm::configure_pools]"
-  ]
-}
-```
-
-### php5-fpm::configure_fpm (optional)
-
-This will replace the php-fpm.conf file based on JSON attributes.  Not needed if you are using the LWRP provider. Include `php5-fpm::configure_fpm` in your node's `run_list`:
-
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[php5-fpm::configure_fpm]"
   ]
 }
 ```

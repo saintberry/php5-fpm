@@ -46,3 +46,9 @@ php5-fpm CHANGELOG
 - stajkowski - Added PHP Overrides and Environment variables to LWRP.  Revised documentation and updated README.
 
 - - -
+
+0.3.3
+-----
+- stajkowski - Adjusted update, upgrade and install_php_modules for boolean values. Add attributes for Chef Server. Adjusted README to indicate configure_fpm a required recipe. Fixed Serverspec OS detection for v2.
+
+- - -
