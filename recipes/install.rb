@@ -75,7 +75,7 @@ elsif node[:platform].include?("ubuntu") && node[:platform_version].include?("10
     end
 
     #Create FPM.d Directory Ubuntu 10.04
-    directory node[:php_fpm][:pools_path] do
+    directory node["php_fpm"]["pools_path"] do
         mode 0755
         action :create
         recursive true
@@ -87,7 +87,7 @@ elsif node[:platform].include?("ubuntu") && node[:platform_version].include?("10
 end
 
 #Check if we are updating the Repos and System
-if node[:php_fpm][:update_system] || update_flag
+if node["php_fpm"]["update_system"] || update_flag
 
     #Select Platform
     case node[:platform]
@@ -100,7 +100,7 @@ if node[:php_fpm][:update_system] || update_flag
         end
 
         #Check if we are upgrading the system as well
-        if node[:php_fpm][:upgrade_system]
+        if node["php_fpm"]["upgrade_system"]
 
             #Do apt-get upgrade
             bash "Run apt-get upgrade" do
@@ -120,7 +120,7 @@ if node[:php_fpm][:update_system] || update_flag
         end
 
         #Check if we are upgrading the system as well
-        if node[:php_fpm][:upgrade_system]
+        if node["php_fpm"]["upgrade_system"]
 
             #Do yum update -y
             bash "Run yum update" do
@@ -135,20 +135,20 @@ if node[:php_fpm][:update_system] || update_flag
 end
 
 #Install PHP Modules if Enabled
-node[:php_fpm][:php_modules].each do |install_packages|
+node["php_fpm"]["php_modules"].each do |install_packages|
     package install_packages do
         action :install
-        only_if { node[:php_fpm][:install_php_modules] }
+        only_if { node["php_fpm"]["install_php_modules"] }
     end
 end
 
 #Install PHP-FPM Package - Don't install if CentOS, it will be installed above as part of the module listing.
-package node[:php_fpm][:package] do
+package node["php_fpm"]["package"] do
     action :install
 end
 
 #Enable and Restart PHP5-FPM
-service node[:php_fpm][:package] do
+service node["php_fpm"]["package"] do
     #Bug in 14.04 for service provider. Adding until resolved.
     if (platform?('ubuntu') && node['platform_version'].to_f >= 14.04)
         provider Chef::Provider::Service::Upstart

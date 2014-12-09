@@ -13,7 +13,7 @@
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
 #Create Pool Configuration
-template "#{node[:php_fpm][:base_path]}/#{node[:php_fpm][:conf_file]}" do
+template "#{ node["php_fpm"]["base_path"]}/#{node["php_fpm"]["conf_file"] }" do
 	source "php-fpm.erb"
 	action :create
 	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed

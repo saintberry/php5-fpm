@@ -13,13 +13,13 @@
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
 #Parse pools
-parsed_pools = JSON.parse(node[:php_fpm][:pools])
+parsed_pools = JSON.parse(node["php_fpm"]["pools"])
 
 #Loop through pools and generate configuration
 parsed_pools.each do |pool,configuration|
 
 	#Create Pool Configuration
-	template "#{node[:php_fpm][:pools_path]}/#{pool}.conf" do
+	template "#{ node["php_fpm"]["pools_path"] }/#{pool}.conf" do
 		source "pool.erb"
 		variables({
 			:POOL_NAME => pool

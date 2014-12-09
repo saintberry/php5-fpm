@@ -1,9 +1,9 @@
 <% 
 #Loop through pool configuration
 if node[:platform_version].include?("10.04") && node[:platform].include?("ubuntu")
-	fpm_config = JSON.parse(node[:php_fpm][:ubuntu1004_config])
+	fpm_config = JSON.parse(node["php_fpm"]["ubuntu1004_config"])
 else
-	fpm_config = JSON.parse(node[:php_fpm][:config])
+	fpm_config = JSON.parse(node["php_fpm"]["config"])
 end
 -%>
 ###################################################################
@@ -21,7 +21,7 @@ end
 	<% if value != "NOT_SET" -%>
 		<% if configuration.include?("pid") && node[:platform].include?("centos") && node[:platform_version].include?("6.") -%>
 <%= "#SETTING CONFIGURATION: #{configuration} ###############" %>
-<%= "#{configuration} = #{node[:php_fpm][:centos_pid]}" %>
+<%= "#{configuration} = #{node["php_fpm"]["centos_pid"]}" %>
 
 		<% else -%>
 <%= "#SETTING CONFIGURATION: #{configuration} ###############" %>
@@ -32,4 +32,4 @@ end
 <% end -%>
 
 #POOL DIRECTORY LOCATION
-<%= node[:php_fpm][:pools_include] %>
+<%= node["php_fpm"]["pools_include"] %>

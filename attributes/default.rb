@@ -18,8 +18,8 @@ when "ubuntu", "debian"
 	default["php_fpm"]["package"] = "php5-fpm"
 	default["php_fpm"]["base_path"] = "/etc/php5/fpm"
 	default["php_fpm"]["conf_file"] = node[:platform_version].include?("10.04") ? "php5-fpm.conf" : "php-fpm.conf"
-	default["php_fpm"]["pools_path"] = node[:platform_version].include?("10.04") ? "#{node[:php_fpm][:base_path]}/fpm.d" : "#{node[:php_fpm][:base_path]}/pool.d"
-	default["php_fpm"]["pools_include"] = "include=#{node[:php_fpm][:pools_path]}/*.conf"
+	default["php_fpm"]["pools_path"] = node[:platform_version].include?("10.04") ? "#{node["php_fpm"]["base_path"]}/fpm.d" : "#{node["php_fpm"]["base_path"]}/pool.d"
+	default["php_fpm"]["pools_include"] = "include=#{node["php_fpm"]["pools_path"]}/*.conf"
 	default["php_fpm"]["php_modules"] = [ 'php5-common', 
 											'php5-mysql', 
 											'php5-curl', 
@@ -30,8 +30,8 @@ when "centos", "redhat", "fedora"
 	default["php_fpm"]["package"] = "php-fpm"
 	default["php_fpm"]["base_path"] = "/etc"
 	default["php_fpm"]["conf_file"] = "php-fpm.conf"
-	default["php_fpm"]["pools_path"] = "#{node[:php_fpm][:base_path]}/php-fpm.d"
-	default["php_fpm"]["pools_include"] = "include=#{node[:php_fpm][:pools_path]}/*.conf"
+	default["php_fpm"]["pools_path"] = "#{node["php_fpm"]["base_path"]}/php-fpm.d"
+	default["php_fpm"]["pools_include"] = "include=#{node["php_fpm"]["pools_path"]}/*.conf"
 	default["php_fpm"]["php_modules"] = [ 'php-common', 
 											'php-mysql', 
 											'php-curl', 

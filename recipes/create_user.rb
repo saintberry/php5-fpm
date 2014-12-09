@@ -13,10 +13,10 @@
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
 #Check if we will create users
-if node[:php_fpm][:create_users]
+if node["php_fpm"]["create_users"]
 
     #Parse users
-    parsed_users = JSON.parse(node[:php_fpm][:users])
+    parsed_users = JSON.parse(node["php_fpm"]["users"])
 
     #Create Folder Strucuture and PHP User
     parsed_users["users"].each do |username,config|

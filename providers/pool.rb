@@ -116,7 +116,7 @@ def load_current_resource
         tmp_env_variables = {}
 
         #open the file for read
-        ::File.open("#{ node[:php_fpm][:pools_path] }/#{ @current_resource.pool_name }.conf", "r") do |fobj|
+        ::File.open("#{ node["php_fpm"]["pools_path"] }/#{ @current_resource.pool_name }.conf", "r") do |fobj|
 
             #loop through each line
             fobj.each_line do |fline|
@@ -208,8 +208,8 @@ end
 def create_file
 
     #open the file and put new values in
-    Chef::Log.debug "DEBUG: Creating file #{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf!"
-    ::File.open("#{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf", "w") do |f|
+    Chef::Log.debug "DEBUG: Creating file #{ node["php_fpm"]["pools_path"] }/#{ @new_resource.pool_name }.conf!"
+    ::File.open("#{ node["php_fpm"]["pools_path"] }/#{ @new_resource.pool_name }.conf", "w") do |f|
 
         f.puts "[#{ @new_resource.pool_name }]"
 
@@ -295,15 +295,15 @@ end
 def delete_file
 
     #delete the file
-    Chef::Log.debug "DEBUG: Removing file #{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf!"
-    ::File.delete("#{ node[:php_fpm][:pools_path] }/#{ @new_resource.pool_name }.conf")
+    Chef::Log.debug "DEBUG: Removing file #{ node["php_fpm"]["pools_path"] }/#{ @new_resource.pool_name }.conf!"
+    ::File.delete("#{ node["php_fpm"]["pools_path"] }/#{ @new_resource.pool_name }.conf")
 
 end
 
 #method for modifying a pool file
 def modify_file
 
-    file_name = "#{ node[:php_fpm][:pools_path] }/#{ @current_resource.pool_name }.conf"
+    file_name = "#{ node["php_fpm"]["pools_path"] }/#{ @current_resource.pool_name }.conf"
 
     #Start Base Configuration
     find_replace(file_name,"user = ",@current_resource.pool_user,@new_resource.pool_user)
@@ -408,7 +408,7 @@ end
 def file_exists?(name)
 
     #if file exists return true
-    Chef::Log.debug "DEBUG: Checking to see if the curent file: '#{ name }.conf' exists in pool directory #{ node[:php_fpm][:pools_path] }"
-    ::File.file?("#{ node[:php_fpm][:pools_path] }/#{ name }.conf")
+    Chef::Log.debug "DEBUG: Checking to see if the curent file: '#{ name }.conf' exists in pool directory #{ node["php_fpm"]["pools_path"] }"
+    ::File.file?("#{ node["php_fpm"]["pools_path"] }/#{ name }.conf")
 
 end
