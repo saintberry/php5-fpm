@@ -49,6 +49,6 @@ php5-fpm CHANGELOG
 
 0.3.3
 -----
-- stajkowski - Adjusted update, upgrade and install_php_modules for boolean values. Add attributes for Chef Server. Adjusted README to indicate configure_fpm a required recipe. Fixed Serverspec OS detection for v2.
+- stajkowski - Chef 12 Supported Now. Adjusted update, upgrade and install_php_modules for boolean values. Add attributes for Chef Server. Adjusted README to indicate configure_fpm a required recipe. Fixed Serverspec OS detection for v2.  Fixed CHEF 12 unsupported methods for calling attributes.
 
 - - -

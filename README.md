@@ -5,6 +5,8 @@ Adding pools can be done by way of LWRP provider or by modifying JSON directly i
 
 When using the JSON option with recipes, if you do not wish to use a configuration value in the JSON attributes, you can simply set it to NOT_SET and it will not be included in the configuration file.  Additionally, you can add more configuration values if they are missing, future proofing the template generation with JSON.
 
+>#### Supported Chef Versions
+>Chef 12 and below
 >#### Supported Platforms
 >Debian(6.x+), Ubuntu(10.04+)
 >CentOS(6.x+), RedHat, Fedora(20+)
