@@ -16,7 +16,7 @@ When using the JSON option with recipes, if you do not wish to use a configurati
 >CenOS 6.x and above
 >Fedora 20
 >#### Planned Improvements
->0.3.4 - Auto Calculate Workers/Clients/ETC - Division of Resources
+>0.3.5 - Auto Calculate Workers/Clients/ETC - Division of Resources
 
 No additional cookboks are required.
 <br />
