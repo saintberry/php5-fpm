@@ -29,7 +29,7 @@ php5_fpm_pool "example" do
                   )
 	overwrite true
 	action :create
-	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
+	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
 
 php5_fpm_pool "example2" do
@@ -43,7 +43,7 @@ php5_fpm_pool "example2" do
 	listen_mode "0666"
 	overwrite true
 	action :create
-	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
+	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
 
 php5_fpm_pool "example" do
@@ -66,10 +66,10 @@ php5_fpm_pool "example" do
                        { "sendmail_path" => "/usr/sbin/sendmail -t -i -f www@my.yourdomain.com", "memory_limit" => "16M"}
                    )
 	action :modify
-	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
+	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
 
 php5_fpm_pool "example2" do
 	action :delete
-	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
+	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end

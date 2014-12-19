@@ -6,6 +6,8 @@ description      'Installs/Configures php5-fpm'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.3.4'
 
+depends 'hostupgrade'
+
 supports 'ubuntu', ">= 10.04"
 supports 'debian', ">= 6.0"
 supports 'centOS', ">= 6.5"
@@ -20,17 +22,17 @@ attribute 'php_fpm/install_php_modules',
           :recipes => [ 'php5_fpm::install' ],
           :default => "true"
 
-attribute 'php_fpm/update_system',
-          :display_name => "PHP5-FPM Update System Repo",
-          :description => "Boolean value to indicate if repos will be udpated with the latest release information.",
+attribute 'php_fpm/use_cookbook_repos',
+          :display_name => "PHP5-FPM Use Cookbook Repos",
+          :description => "Let the cookbook install repos for PHP5-FPM for earlier OS versions.",
           :type => "boolean",
           :required => true,
           :recipes => [ 'php5_fpm::install' ],
           :default => "true"
 
-attribute 'php_fpm/upgrade_system',
-          :display_name => "PHP5-FPM Upgrade System",
-          :description => "Boolean value to indicate if new updates found should be installed.",
+attribute 'php_fpm/run_update',
+          :display_name => "PHP5-FPM Run Update",
+          :description => "Let the install recipe run an update and upgrade.",
           :type => "boolean",
           :required => true,
           :recipes => [ 'php5_fpm::install' ],

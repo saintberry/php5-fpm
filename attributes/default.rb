@@ -1,9 +1,12 @@
 
 #Global options, install php modules and users(optional)
-default["php_fpm"]["install_php_modules"] = true
-default["php_fpm"]["update_system"] = true
-default["php_fpm"]["upgrade_system"] = true
+default["php_fpm"]["install_php_modules"] = false
+#Let the cookbook install repos for earlier versions of debian, centos and ubuntu
+default["php_fpm"]["use_cookbook_repos"] = true
+#Let the install recipe update and upgrade the system with hostupgrade
+default["php_fpm"]["run_update"] = true
 
+#If the cookbook is creating users, let's state who they are
 default["php_fpm"]["create_users"] = true
 default["php_fpm"]["users"] = 
 '{ "users": 

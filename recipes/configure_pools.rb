@@ -25,7 +25,7 @@ parsed_pools.each do |pool,configuration|
 			:POOL_NAME => pool
 		})
 		action :create
-		notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
+		notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 	end
 
 end

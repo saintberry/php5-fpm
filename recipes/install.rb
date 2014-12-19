@@ -12,8 +12,12 @@
 #(_ P _ ((_ H _ ((_ P _ ((_ - _ ((_ F _ ((_ P _ ((_ M _ (_ 
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
+
+
+### - Configure REPOs for Earlier Releases
+
 #Configure REPO for Debian 6.x
-if node[:platform].include?("debian") && node[:platform_version].include?("6.")
+if node[:platform].include?("debian") && node[:platform_version].include?("6.") && node["php_fpm"]["use_cookbook_repos"]
 
     #Install php5-fpm repo Debian 6.x
     cookbook_file "/etc/apt/sources.list.d/dotdeb.list" do
@@ -28,10 +32,7 @@ if node[:platform].include?("debian") && node[:platform_version].include?("6.")
         action :run
     end
 
-    #Flag for update
-    update_flag = true
-
-elsif node[:platform].include?("centos") && node[:platform_version].include?("6.")
+elsif node[:platform].include?("centos") && node[:platform_version].include?("6.") && node["php_fpm"]["use_cookbook_repos"]
 
     #Install RPMForge Key CentOS 6.x
     bash "Add RPMForge Key CentOS 6.x" do
@@ -51,10 +52,7 @@ elsif node[:platform].include?("centos") && node[:platform_version].include?("6.
         action :remove
     end
 
-    #Flag for update
-    update_flag = true
-
-elsif node[:platform].include?("ubuntu") && node[:platform_version].include?("10.04")
+elsif node[:platform].include?("ubuntu") && node[:platform_version].include?("10.04") && node["php_fpm"]["use_cookbook_repos"]
 
     #Install Python Software Props Ubuntu 10.04
     package "python-software-properties" do
@@ -81,58 +79,26 @@ elsif node[:platform].include?("ubuntu") && node[:platform_version].include?("10
         recursive true
     end
 
-    #Flag for update
-    update_flag = true
+end
+
+
+
+
+
+### - Update Host If Enabled
+
+#Run our update if stated **hostupgrade will only run on first-run by default
+if node["php_fpm"]["run_update"]
+
+    #Run our host update and upgrade
+    include_recipe 'hostupgrade::upgrade'
 
 end
 
-#Check if we are updating the Repos and System
-if node["php_fpm"]["update_system"] || update_flag
 
-    #Select Platform
-    case node[:platform]
-    when "ubuntu", "debian"
 
-        #Do apt-get update
-        bash "Run apt-get update" do
-            code "apt-get update"
-            action :run
-        end
 
-        #Check if we are upgrading the system as well
-        if node["php_fpm"]["upgrade_system"]
-
-            #Do apt-get upgrade
-            bash "Run apt-get upgrade" do
-                code "DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y"
-                action :run
-            end
-
-        end
-
-    when "centos", "redhat", "fedora"
-
-        #Do yum check-update
-        bash "Run yum check-update" do
-            code "yum check-update"
-            returns [0, 100]
-            action :run
-        end
-
-        #Check if we are upgrading the system as well
-        if node["php_fpm"]["upgrade_system"]
-
-            #Do yum update -y
-            bash "Run yum update" do
-                code "yum update -y"
-                action :run
-            end
-
-        end
-
-    end
-
-end
+### - Install PHP Modules and PHP-FPM Package
 
 #Install PHP Modules if Enabled
 node["php_fpm"]["php_modules"].each do |install_packages|
@@ -155,4 +121,16 @@ service node["php_fpm"]["package"] do
     end
     supports :start => true, :stop => true, :restart => true, :reload => true
     action [ :enable, :start ]
+end
+
+
+
+
+### - Base Required FPM Configuration
+
+#Create Pool Configuration
+template "#{ node["php_fpm"]["base_path"]}/#{node["php_fpm"]["conf_file"] }" do
+    source "php-fpm.erb"
+    action :create
+    notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end

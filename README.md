@@ -1,9 +1,11 @@
 PHP5-FPM Cookbook
 =====
 <br />
-Adding pools can be done by way of LWRP provider or by modifying JSON directly in the attributes file or overriding the attributes through other methods, environments, roles, etc.  Usage of the receipes beyond ::install is optional and not needed if using the LWRP provider.
+Adding pools can be done by way of LWRP provider or by modifying JSON directly in the attributes file or overriding the attributes through other methods, environments, roles, etc.  Usage of the receipes beyond ::install is optional and not
+needed if using the LWRP provider.
 
-When using the JSON option with recipes, if you do not wish to use a configuration value in the JSON attributes, you can simply set it to NOT_SET and it will not be included in the configuration file.  Additionally, you can add more configuration values if they are missing, future proofing the template generation with JSON.
+When using the JSON option with recipes, if you do not wish to use a configuration value in the JSON attributes, you can simply set it to NOT_SET and it will not be included in the configuration file.  Additionally, you can add more
+configuration values if they are missing, future proofing the template generation with JSON.
 
 >#### Supported Chef Versions
 >Chef 12 and below
@@ -16,9 +18,9 @@ When using the JSON option with recipes, if you do not wish to use a configurati
 >CenOS 6.x and above
 >Fedora 20
 >#### Planned Improvements
->0.3.5 - Auto Calculate Workers/Clients/ETC - Division of Resources
-
-No additional cookboks are required.
+>0.4.0 - Auto Calculate Workers/Clients/ETC - Division of Resources
+>#### Required Cookbooks
+>hostupgrade
 <br />
 <br />
 <br />
@@ -37,18 +39,18 @@ _____
     <td><tt>["php_fpm"]["install_php_modules"]</tt></td>
     <td>Boolean</td>
     <td>Install Additional PHP Modules</td>
+    <td><tt>false</tt></td>
+  </tr>
+  <tr>
+    <td><tt>["php_fpm"]["use_cookbook_repos"]</tt></td>
+    <td>Boolean</td>
+    <td>Use cookbook to install repos</td>
     <td><tt>true</tt></td>
   </tr>
   <tr>
-    <td><tt>["php_fpm"]["update_system"]</tt></td>
+    <td><tt>["php_fpm"]["run_update"]</tt></td>
     <td>Boolean</td>
-    <td>Update repository information</td>
-    <td><tt>true</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["upgrade_system"]</tt></td>
-    <td>Boolean</td>
-    <td>Perform upgrades to OS</td>
+    <td>Run hostupgrade::upgrade</td>
     <td><tt>true</tt></td>
   </tr>
   <tr>
@@ -179,7 +181,7 @@ php5_fpm_pool "example" do
                   )
 	overwrite true
 	action :create
-	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
+	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
 ```
 
@@ -204,7 +206,7 @@ php5_fpm_pool "example" do
                        { "sendmail_path" => "/usr/sbin/sendmail -t -i -f www@my.yourdomain.com", "memory_limit" => "16M"}
                    )
 	action :modify
-	notifies :restart, "service[#{node[:php_fpm][:package]}]", :delayed
+	notifies :restart, "service[#{node["php_fpm"]["packag"]}]", :delayed
 end
 ```
 <br />
@@ -221,19 +223,6 @@ Install PHP5-FPM. Include `php5-fpm::install` in your node's `run_list`:
   "name":"my_node",
   "run_list": [
     "recipe[php5-fpm::install]"
-  ]
-}
-```
-
-### php5-fpm::configure_fpm (required)
-
-This will replace the php-fpm.conf file based on JSON attributes.  This is required. Include `php5-fpm::configure_fpm` in your node's `run_list`:
-
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[php5-fpm::configure_fpm]"
   ]
 }
 ```
