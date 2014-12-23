@@ -7,6 +7,9 @@ needed if using the LWRP provider.
 When using the JSON option with recipes, if you do not wish to use a configuration value in the JSON attributes, you can simply set it to NOT_SET and it will not be included in the configuration file.  Additionally, you can add more
 configuration values if they are missing, future proofing the template generation with JSON.
 
+As of version 4.0, you can auto-calculate the procs and workers needed and define the percentage of resources the pool should consume on the server.  This allows for quick creation of php-fpm pools and not having
+to perform the calculation yourself.  Please see the LWRP attributes below and the auto-calculation example.
+
 >#### Supported Chef Versions
 >Chef 12 and below
 >#### Supported Platforms
@@ -401,6 +404,35 @@ php5_fpm_pool "example" do
 	notifies :restart, "service[#{node["php_fpm"]["packag"]}]", :delayed
 end
 ```
+<br />
+<br />
+
+### Auto-Calculate Example
+
+```
+php5_fpm_pool "example" do
+	pool_user "fpm_user"
+	pool_group "fpm_group"
+	listen_allowed_clients "127.0.0.1"
+    auto_calculate true
+    percent_share 80
+    round_down true
+	pm_process_idle_timeout "30s"
+	pm_max_requests 1000
+	pm_status_path "/mystatus"
+	ping_path "/myping"
+	ping_response "/myresponse"
+    php_ini_flags (
+                      { "display_errors" => "on", "log_errors" => "off"}
+                  )
+    php_ini_values (
+                       { "sendmail_path" => "/usr/sbin/sendmail -t -i -f www@my.yourdomain.com", "memory_limit" => "16M"}
+                   )
+	action :modify
+	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
+end
+```
+
 <br />
 <br />
 <br />
