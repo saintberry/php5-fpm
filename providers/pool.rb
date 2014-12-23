@@ -105,6 +105,11 @@ def load_current_resource
     #ENV Variables
     @current_resource.env_variables(@new_resource.env_variables)
 
+    #Auto Resource Provisioning
+    @current_resource.auto_calculate(@new_resource.auto_calculate)
+    @current_resource.percent_share(@new_resource.percent_share)
+    @current_resource.round_down(@new_resource.round_down)
+
     #if the file exists, load current state
     if file_exists?(@current_resource.pool_name)
 
@@ -200,6 +205,14 @@ def load_current_resource
 
         #flag that they current file exists
         @current_resource.exists = true
+    end
+
+    #If we are to auto_calculate, then call the method
+    if @current_resource.auto_calculate
+
+        #Call auto_calculate
+        auto_calculate(@new_resource.pm,(@current_resource.percent_share / 100),@current_resource.round_down)
+
     end
 
 end
@@ -381,6 +394,41 @@ def modify_file
         @current_resource.env_variables.each do | k, v |
             find_replace(file_name,"env[#{ k }] = ",v,@new_resource.env_variables["#{ k }"])
         end
+    end
+
+end
+
+#method for calculating the processes and workers for auto_calculate
+def auto_calculate(process_type, percent_share, round_down)
+
+    #Using auto_calculate
+    Chef::Log.debug "DEBUG: Using auto-calculation for #{ process_type } with percent share #{ percent_share }."
+
+    #Get our memory information from proc for the base number or processes
+    cmd = 'cat /proc/meminfo | grep MemTotal | awk \'{ total = sprintf("%.0f",$2/1024-512); print total}\' | awk \'{total = sprintf("%.0f",$1/128); print total;}\''
+    cmd_resp = Mixlib::ShellOut.new(cmdStr)
+    procs = Float(cmd_resp.stdout)  #This is our base PROCS, then we can calculate the shared amount
+
+    #Calcuate the percent share
+    round_down ? share_procs = Float(procs * percent_share).floor : share_procs = Float(procs * percent_share).ceil
+    Chef::Log.debug "DEBUG: Number of PROCS calculated for this server is #{ share_procs }"
+
+    #Check our process type for static or dynamic, if static, only modify the max children
+    if process_type == "static"
+        @new_resource.pm_max_children(share_procs)
+
+    else #Default to dynamic process type
+
+        #Calculate workers
+        round_down ? share_workers = Float(new_procs / 2).floor : share_workers = Float(new_procs / 2).ceil
+        Chef::Log.debug "DEBUG: Number of WORKERS calculated for this server is #{ share_workers }"
+
+        #Set the remaining workers configuration
+        @new_resource.pm_max_children(share_procs)
+        @new_resource.pm_start_servers(share_workers)
+        @new_resource.pm_min_spare_servers(share_workers)
+        @new_resource.pm_max_spare_servers(share_workers)
+
     end
 
 end

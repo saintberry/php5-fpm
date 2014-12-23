@@ -55,4 +55,9 @@ attribute :php_ini_admin_values, :kind_of => Hash, :required => false, :default 
 #ENV Variables
 attribute :env_variables, :kind_of => Hash, :required => false, :default => nil
 
+#Auto Resource Provisioning
+attribute :auto_calculate, :kind_of => String, :required => false, :default => false
+attribute :percent_share, :kind_of => Integer, :required => false, :default => 100
+attribute :round_down, :kind_of => String, :required => false, :default => false
+
 attr_accessor :exists

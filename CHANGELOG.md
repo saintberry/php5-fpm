@@ -1,6 +1,12 @@
 php5-fpm CHANGELOG
 =================
 
+0.4.0
+-----
+- stajkowski - Added the option to autocalculate workers.  More information is in the README.
+
+- - -
+
 0.3.4
 -----
 - stajkowski - Adjust changelog order for updates from Chef Supermarket.  Moved host update and upgrade actions to hostupgrade cookbook and included recipe, added berksfile location, and updated metadata.  Added node["php_fpm"]["run_update"] to state if hostupgrade recipe should run.
@@ -9,6 +15,7 @@ php_fpm/run_update and php_fpm/use_cookbook_repos to false, you can control your
 ***Keep in mind, the hostupgrade cookbook is set by default to run only on the first run and not every time chef-client runs, set node["host_upgrade"]["first_time_only"] to false to run every time.
 ***Attribute node["php_fpm"]["install_php_modules"] is now set to false by default as this is optional.
 ***Recipe configure_fpm.rb has been removed.  This is now part of the install recipe; now, as a minimum, you only need to run install recipe.
+
 - - -
 
 0.3.3
