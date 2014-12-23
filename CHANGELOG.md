@@ -3,7 +3,10 @@ php5-fpm CHANGELOG
 
 0.4.0
 -----
-- stajkowski - Added the option to auto_calculate workers in LWRP.  More information is in the README as well as examples.  Reformatted README and added more documentation.
+- stajkowski - As of version 4.0, you can auto-calculate the procs and workers needed and define the percentage of resources the pool should consume on the server.  This allows for quick creation of php-fpm pools and not having
+to perform the calculation yourself.  Please see the LWRP attributes below and the auto-calculation example but the simplest explantation is the pm configuration will be determined by the calculation.  If the pm
+type is set to static then the max_children will only be used.  If the type is dynamic, the auto-calculation will populate the additional pm configuration options but not the pm.max_requests, this will need to be set
+manually.  More information is in the README as well as examples.  Reformatted README and added more documentation.
 
 - - -
 
