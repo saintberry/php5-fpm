@@ -358,7 +358,7 @@ ______
     <tr>
         <td>round_down</td>
         <td>String Default: false</td>
-        <td>Round-up is defined by default; enabled round-down to go the other way.</td>
+        <td>Round-up is defined by default; set round_down to trye to go the other way.</td>
     </tr>
 </table>
 <br />
