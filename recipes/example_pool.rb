@@ -54,6 +54,9 @@ php5_fpm_pool "example" do
 	pm_start_servers 10
 	pm_min_spare_servers 5
 	pm_max_spare_servers 10
+    auto_calculate true
+    percent_share 80
+    round_down true
 	pm_process_idle_timeout "30s"
 	pm_max_requests 1000
 	pm_status_path "/mystatus"

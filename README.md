@@ -99,12 +99,69 @@ ______
 <br />
 ### Actions
 
-- :create
-- :modify
-- :delete
+>:create
+>:modify
+>:delete
 <br />
 <br />
 ### Attribute Parameters
+<table>
+    <tr>
+        <th>Attribute</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>overwrite</td>
+        <td>True/False Default: false</td>
+        <td>Determine if the pool configuration will be overwritten if it exists.</td>
+    </tr>
+    <tr>
+        <td>pool_name</td>
+        <td>String</td>
+        <td>Name of the pool; it will also be used to name the pool file.</td>
+    </tr>
+    <tr>
+        <td>pool_user</td>
+        <td>String Default: www-data</td>
+        <td>Sets the <i>user</i> attribute in the pool configuration file.</td>
+    </tr>
+    <tr>
+        <td>pool_group</td>
+        <td>String Default: www-data</td>
+        <td>Sets the <i>group</i> attribute in the pool configuration file.</td>
+    </tr>
+    <tr>
+        <td>listen_address</td>
+        <td>String Default: 127.0.0.1</td>
+        <td>Sets the <i>listen</i> attribute in the pool configuration file.</td>
+    </tr>
+    <tr>
+        <td>listen_port</td>
+        <td>Integer Default: 9000</td>
+        <td>Sets the <i>listen</i> attribute in the pool configuration file.</td>
+    </tr>
+    <tr>
+        <td>listen_allowed_clients</td>
+        <td>String Default: nil</td>
+        <td>Sets the <i>listen.allowed_clients</i> attribute in the pool configuration file.</td>
+    </tr>
+    <tr>
+        <td>listen_owner</td>
+        <td>String Default: nil</td>
+        <td>Sets the <i>listen.owner</i> attribute in the pool configuration file.</td>
+    </tr>
+    <tr>
+        <td>listen_group</td>
+        <td>String Default: nil</td>
+        <td>Sets the <i>listen.group</i> attribute in the pool configuration file.</td>
+    </tr>
+    <tr>
+        <td>listen_mode</td>
+        <td>String Default: nil</td>
+        <td>Sets the <i>listen.mode</i> attribute in the pool configuration file.</td>
+    </tr>
+</table>
 
 ```
 #Overwrite for file replacement
@@ -158,6 +215,11 @@ attribute :php_ini_admin_values, :kind_of => Hash, :required => false, :default 
 
 #ENV Variables
 attribute :env_variables, :kind_of => Hash, :required => false, :default => nil
+
+#Auto Resource Provisioning
+attribute :auto_calculate, :kind_of => String, :required => false, :default => false
+attribute :percent_share, :kind_of => Integer, :required => false, :default => 100
+attribute :round_down, :kind_of => String, :required => false, :default => false
 ```
 <br />
 <br />

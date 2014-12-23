@@ -101,10 +101,8 @@ def load_current_resource
     @current_resource.php_ini_flags(@new_resource.php_ini_flags)
     @current_resource.php_ini_admin_values(@new_resource.php_ini_admin_values)
     @current_resource.php_ini_admin_flags(@new_resource.php_ini_admin_flags)
-
     #ENV Variables
     @current_resource.env_variables(@new_resource.env_variables)
-
     #Auto Resource Provisioning
     @current_resource.auto_calculate(@new_resource.auto_calculate)
     @current_resource.percent_share(@new_resource.percent_share)
@@ -211,7 +209,7 @@ def load_current_resource
     if @current_resource.auto_calculate
 
         #Call auto_calculate
-        auto_calculate(@new_resource.pm,(@current_resource.percent_share / 100),@current_resource.round_down)
+        auto_calculate(@new_resource.pm, (@new_resource.percent_share / 100.00), @new_resource.round_down)
 
     end
 
@@ -402,29 +400,34 @@ end
 def auto_calculate(process_type, percent_share, round_down)
 
     #Using auto_calculate
-    Chef::Log.debug "DEBUG: Using auto-calculation for #{ process_type } with percent share #{ percent_share }."
+    Chef::Log.info "INFO: Using auto-calculation for #{ process_type } with percent share #{ percent_share }."
 
     #Get our memory information from proc for the base number or processes
-    cmd = 'cat /proc/meminfo | grep MemTotal | awk \'{ total = sprintf("%.0f",$2/1024-512); print total}\' | awk \'{total = sprintf("%.0f",$1/128); print total;}\''
-    cmd_resp = Mixlib::ShellOut.new(cmdStr)
+    cmd = "cat /proc/meminfo | grep MemTotal | awk '{ total = sprintf(\"%.0f\",$2/1024-512); print total}' | awk '{total = sprintf(\"%.0f\",$1/128); print total;}'"
+    cmd_resp = Mixlib::ShellOut.new(cmd)
+    cmd_resp.run_command
     procs = Float(cmd_resp.stdout)  #This is our base PROCS, then we can calculate the shared amount
+    Chef::Log.info "INFO: Number of PROCS calculated for this server is #{ procs }"
 
     #Calcuate the percent share
     round_down ? share_procs = Float(procs * percent_share).floor : share_procs = Float(procs * percent_share).ceil
-    Chef::Log.debug "DEBUG: Number of PROCS calculated for this server is #{ share_procs }"
+    #Check if we are too low, set a baseline
+    share_procs < 1 ? share_procs = 1 : nil
+    Chef::Log.info "INFO: Number of Shared PROCS calculated for this server are #{ share_procs }."
 
-    #Check our process type for static or dynamic, if static, only modify the max children
-    if process_type == "static"
-        @new_resource.pm_max_children(share_procs)
+    #Only modify the max_children for static first
+    @new_resource.pm_max_children(share_procs)
 
-    else #Default to dynamic process type
+    #Check our process type for dynamic, if dynamic, add additional configuration
+    if process_type == "dynamic"
 
         #Calculate workers
-        round_down ? share_workers = Float(new_procs / 2).floor : share_workers = Float(new_procs / 2).ceil
-        Chef::Log.debug "DEBUG: Number of WORKERS calculated for this server is #{ share_workers }"
+        round_down ? share_workers = Float(share_procs / 2.00).floor : share_workers = Float(share_procs / 2.00).ceil
+        #Check if we are too low, set a baseline
+        share_workers < 1 ? share_workers = 1 : nil
+        Chef::Log.info "INFO: Number of WORKERS calculated for this server are #{ share_workers }."
 
         #Set the remaining workers configuration
-        @new_resource.pm_max_children(share_procs)
         @new_resource.pm_start_servers(share_workers)
         @new_resource.pm_min_spare_servers(share_workers)
         @new_resource.pm_max_spare_servers(share_workers)
