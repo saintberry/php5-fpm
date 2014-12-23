@@ -21,6 +21,7 @@ configuration values if they are missing, future proofing the template generatio
 >0.4.0 - Auto Calculate Workers/Clients/ETC - Division of Resources
 >#### Required Cookbooks
 >hostupgrade
+
 <br />
 <br />
 <br />
@@ -99,9 +100,9 @@ ______
 <br />
 ### Actions
 
->####create
->####modify
->####delete
+* create
+* modify
+* delete
 <br />
 <br />
 ### Attribute Parameters
