@@ -105,7 +105,9 @@ ______
 * delete
 <br />
 <br />
+
 ### Attribute Parameters
+
 <table>
     <tr>
         <th>Attribute</th>
@@ -116,6 +118,11 @@ ______
         <td>overwrite</td>
         <td>True/False Default: false</td>
         <td>Determine if the pool configuration will be overwritten if it exists.</td>
+    </tr>
+    <tr>
+        <td><b>Base Pool</b></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>pool_name</td>
@@ -163,6 +170,11 @@ ______
         <td>Sets the <i>listen.mode</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
+        <td><b>PM Config</b></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
         <td>pm</td>
         <td>String Default: dynamic</td>
         <td>Sets the <i>pm</i> attribute in the pool conf file.</td>
@@ -203,6 +215,11 @@ ______
         <td>Sets the <i>pm.status_path</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
+        <td><b>Ping</b></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
         <td>ping_path</td>
         <td>String Default: /ping</td>
         <td>Sets the <i>ping.path</i> attribute in the pool conf file.</td>
@@ -211,6 +228,11 @@ ______
         <td>ping_response</td>
         <td>String Default: /pong</td>
         <td>Sets the <i>ping.response</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td><b>Logging</b></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>access_format</td>
@@ -236,6 +258,11 @@ ______
         <td>slow_log</td>
         <td>String Default: nil</td>
         <td>Sets the <i>slowlog</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td><b>MISC</b></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>chdir</td>
@@ -268,6 +295,11 @@ ______
         <td>Sets the <i>rlimit_core</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
+        <td><b>PHP Conf Flags/Values</b></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
         <td>php_ini_flags</td>
         <td>Hash Default: nil</td>
         <td>Sets the <i>php_flag[]</i> attribute in the pool conf file.</td>
@@ -288,9 +320,19 @@ ______
         <td>Sets the <i>php_admin_value[]</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
+        <td><b>Environment Vars</b></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
         <td>env_variables</td>
         <td>Hash Default: nil</td>
         <td>Sets the <i>env[]</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td><b>Auto-Calculate</b></td>
+        <td></td>
+        <td></td>
     </tr>
     <tr>
         <td>auto_calculate</td>
@@ -310,6 +352,7 @@ ______
 </table>
 <br />
 <br />
+
 ### Example
 
 ```
