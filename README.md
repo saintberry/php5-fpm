@@ -99,9 +99,9 @@ ______
 <br />
 ### Actions
 
->:create
->:modify
->:delete
+>####create
+>####modify
+>####delete
 <br />
 <br />
 ### Attribute Parameters
@@ -124,103 +124,189 @@ ______
     <tr>
         <td>pool_user</td>
         <td>String Default: www-data</td>
-        <td>Sets the <i>user</i> attribute in the pool configuration file.</td>
+        <td>Sets the <i>user</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
         <td>pool_group</td>
         <td>String Default: www-data</td>
-        <td>Sets the <i>group</i> attribute in the pool configuration file.</td>
+        <td>Sets the <i>group</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
         <td>listen_address</td>
         <td>String Default: 127.0.0.1</td>
-        <td>Sets the <i>listen</i> attribute in the pool configuration file.</td>
+        <td>Sets the <i>listen</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
         <td>listen_port</td>
         <td>Integer Default: 9000</td>
-        <td>Sets the <i>listen</i> attribute in the pool configuration file.</td>
+        <td>Sets the <i>listen</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
         <td>listen_allowed_clients</td>
         <td>String Default: nil</td>
-        <td>Sets the <i>listen.allowed_clients</i> attribute in the pool configuration file.</td>
+        <td>Sets the <i>listen.allowed_clients</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
         <td>listen_owner</td>
         <td>String Default: nil</td>
-        <td>Sets the <i>listen.owner</i> attribute in the pool configuration file.</td>
+        <td>Sets the <i>listen.owner</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
         <td>listen_group</td>
         <td>String Default: nil</td>
-        <td>Sets the <i>listen.group</i> attribute in the pool configuration file.</td>
+        <td>Sets the <i>listen.group</i> attribute in the pool conf file.</td>
     </tr>
     <tr>
         <td>listen_mode</td>
         <td>String Default: nil</td>
-        <td>Sets the <i>listen.mode</i> attribute in the pool configuration file.</td>
+        <td>Sets the <i>listen.mode</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>pm</td>
+        <td>String Default: dynamic</td>
+        <td>Sets the <i>pm</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>pm_max_children</td>
+        <td>Integer Default: 10</td>
+        <td>Sets the <i>pm.max_children</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>pm_start_servers</td>
+        <td>Integer Default: 4</td>
+        <td>Sets the <i>pm.start_servers</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>pm_min_spare_servers</td>
+        <td>Integer Default: 2</td>
+        <td>Sets the <i>pm.min_spare_servers</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>pm_max_spare_servers</td>
+        <td>Integer Default: 6</td>
+        <td>Sets the <i>pm.max_spare_servers</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>pm_process_idle_timeout</td>
+        <td>String Default: 10s</td>
+        <td>Sets the <i>pm.process_idle_timeout</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>pm_max_requests</td>
+        <td>Integer Default: 0</td>
+        <td>Sets the <i>pm.max_requests</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>pm_status_path</td>
+        <td>String Default: /status</td>
+        <td>Sets the <i>pm.status_path</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>ping_path</td>
+        <td>String Default: /ping</td>
+        <td>Sets the <i>ping.path</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>ping_response</td>
+        <td>String Default: /pong</td>
+        <td>Sets the <i>ping.response</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>access_format</td>
+        <td>String Default: %R - %u %t \"%m %r\" %s</td>
+        <td>Sets the <i>access.format</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>request_slowlog_timeout</td>
+        <td>Integer Default: 0</td>
+        <td>Sets the <i>request_slowlog_timeout</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>request_terminate_timeout</td>
+        <td>Integer Default: 0</td>
+        <td>Sets the <i>request_terminate_timeout</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>access_log</td>
+        <td>String Default: nil</td>
+        <td>Sets the <i>access.log</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>slow_log</td>
+        <td>String Default: nil</td>
+        <td>Sets the <i>slowlog</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>chdir</td>
+        <td>String Default: /</td>
+        <td>Sets the <i>chdir</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>chroot</td>
+        <td>String Default: nil</td>
+        <td>Sets the <i>chroot</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>catch_workers_output</td>
+        <td>String yes/no Default: no</td>
+        <td>Sets the <i>catch_workers_output</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>security_limit_extensions</td>
+        <td>String Default: .php</td>
+        <td>Sets the <i>security.limit_extensions</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>rlimit_files</td>
+        <td>Integer Default: nil</td>
+        <td>Sets the <i>rlimit_files</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>rlimit_core</td>
+        <td>Integer Default: nil</td>
+        <td>Sets the <i>rlimit_core</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>php_ini_flags</td>
+        <td>Hash Default: nil</td>
+        <td>Sets the <i>php_flag[]</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>php_ini_values</td>
+        <td>Hash Default: nil</td>
+        <td>Sets the <i>php_value[]</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>php_ini_admin_flags</td>
+        <td>Hash Default: nil</td>
+        <td>Sets the <i>php_admin_flag[]</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>php_ini_admin_values</td>
+        <td>Hash Default: nil</td>
+        <td>Sets the <i>php_admin_value[]</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>env_variables</td>
+        <td>Hash Default: nil</td>
+        <td>Sets the <i>env[]</i> attribute in the pool conf file.</td>
+    </tr>
+    <tr>
+        <td>auto_calculate</td>
+        <td>String Default: false</td>
+        <td>Enables auto-calculation of php-fpm pool resources.</td>
+    </tr>
+    <tr>
+        <td>percent_share</td>
+        <td>Integer 1 - 100 Default: 100</td>
+        <td>Defines the percentage share of the server resources the pool can consume.</td>
+    </tr>
+    <tr>
+        <td>round_down</td>
+        <td>String Default: false</td>
+        <td>Round-up is defined by default; enabled round-down to go the other way.</td>
     </tr>
 </table>
-
-```
-#Overwrite for file replacement
-attribute :overwrite, :kind_of => [ TrueClass, FalseClass ], :default => false
-
-#Base Pool Configuration
-attribute :pool_name, :name_attribute => true, :kind_of => String, :required => true
-attribute :pool_user, :kind_of => String, :required => false, :default => 'www-data'
-attribute :pool_group, :kind_of => String, :required => false, :default => 'www-data'
-attribute :listen_address, :kind_of => String, :required => false, :default => '127.0.0.1', :regex => Resolv::IPv4::Regex
-attribute :listen_port, :kind_of => Integer, :required => false, :default => 9000
-attribute :listen_allowed_clients, :kind_of => String, :required=> false, :default => nil
-attribute :listen_owner, :kind_of => String, :required=> false, :default => nil
-attribute :listen_group, :kind_of => String, :required=> false, :default => nil
-attribute :listen_mode, :kind_of => String, :required=> false, :default => nil
-
-#PM Configuration
-attribute :pm, :kind_of => String, :required => false, :default => 'dynamic'
-attribute :pm_max_children, :kind_of => Integer, :required => false, :default => 10
-attribute :pm_start_servers, :kind_of => Integer, :required => false, :default => 4
-attribute :pm_min_spare_servers, :kind_of => Integer, :required => false, :default => 2
-attribute :pm_max_spare_servers, :kind_of => Integer, :required => false, :default => 6
-attribute :pm_process_idle_timeout, :kind_of => String, :required => false, :default => '10s'
-attribute :pm_max_requests, :kind_of => Integer, :required => false, :default => 0
-attribute :pm_status_path, :kind_of => String, :required => false, :default => '/status'
-
-#Ping Status
-attribute :ping_path, :kind_of => String, :required => false, :default => '/ping'
-attribute :ping_response, :kind_of => String, :required => false, :default => '/pong'
-
-#Logging
-attribute :access_format, :kind_of => String, :required => false, :default => '%R - %u %t \"%m %r\" %s'
-attribute :request_slowlog_timeout, :kind_of => Integer, :required => false, :default => 0
-attribute :request_terminate_timeout, :kind_of => Integer, :required => false, :default => 0
-attribute :access_log, :kind_of => String, :required => false, :default => nil
-attribute :slow_log, :kind_of => String, :required => false, :default => nil
-
-#Misc
-attribute :chdir, :kind_of => String, :required => false, :default => '/'
-attribute :chroot, :kind_of => String, :required => false, :default => nil
-attribute :catch_workers_output, :kind_of => String, :required => false, :equal_to => ['yes', 'no'], :default => 'no'
-attribute :security_limit_extensions, :kind_of => String, :required => false, :default => '.php'
-attribute :rlimit_files, :kind_of => Integer, :required => false, :default => nil
-attribute :rlimit_core, :kind_of => Integer, :required => false, :default => nil
-
-#PHP INI
-attribute :php_ini_flags, :kind_of => Hash, :required => false, :default => nil
-attribute :php_ini_values, :kind_of => Hash, :required => false, :default => nil
-attribute :php_ini_admin_flags, :kind_of => Hash, :required => false, :default => nil
-attribute :php_ini_admin_values, :kind_of => Hash, :required => false, :default => nil
-
-#ENV Variables
-attribute :env_variables, :kind_of => Hash, :required => false, :default => nil
-
-#Auto Resource Provisioning
-attribute :auto_calculate, :kind_of => String, :required => false, :default => false
-attribute :percent_share, :kind_of => Integer, :required => false, :default => 100
-attribute :round_down, :kind_of => String, :required => false, :default => false
-```
 <br />
 <br />
 ### Example
