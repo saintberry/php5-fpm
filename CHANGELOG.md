@@ -3,7 +3,7 @@ php5-fpm CHANGELOG
 
 0.4.0
 -----
-- stajkowski - Added the option to auto_calculate workers in LWRP.  More information is in the README as well as examples.
+- stajkowski - Added the option to auto_calculate workers in LWRP.  More information is in the README as well as examples.  Reformatted README and added more documentation.
 
 - - -
 

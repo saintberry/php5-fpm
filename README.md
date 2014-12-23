@@ -8,7 +8,9 @@ When using the JSON option with recipes, if you do not wish to use a configurati
 configuration values if they are missing, future proofing the template generation with JSON.
 
 As of version 4.0, you can auto-calculate the procs and workers needed and define the percentage of resources the pool should consume on the server.  This allows for quick creation of php-fpm pools and not having
-to perform the calculation yourself.  Please see the LWRP attributes below and the auto-calculation example.
+to perform the calculation yourself.  Please see the LWRP attributes below and the auto-calculation example but the simplest explantation is the pm configuration will be determined by the calculation.  If the pm
+type is set to static then the max_children will only be used.  If the type is dynamic, the auto-calculation will populate the additional pm configuration options but not the pm.max_requests, this will need to be set
+manually.
 
 >#### Supported Chef Versions
 >Chef 12 and below
@@ -21,7 +23,7 @@ to perform the calculation yourself.  Please see the LWRP attributes below and t
 >CenOS 6.x and above
 >Fedora 20
 >#### Planned Improvements
->0.4.0 - Auto Calculate Workers/Clients/ETC - Division of Resources
+>0.4.0]1 - Any additional bugs
 >#### Required Cookbooks
 >hostupgrade
 
