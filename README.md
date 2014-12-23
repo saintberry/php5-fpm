@@ -40,27 +40,33 @@ _____
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>["php_fpm"]["install_php_modules"]</tt></td>
-    <td>Boolean</td>
-    <td>Install Additional PHP Modules</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
     <td><tt>["php_fpm"]["use_cookbook_repos"]</tt></td>
     <td>Boolean</td>
-    <td>Use cookbook to install repos</td>
+    <td>Use cookbook to install repos for earlier OS versions, ubuntu 10.04, centos 6.x, debian 6.x</td>
     <td><tt>true</tt></td>
   </tr>
   <tr>
     <td><tt>["php_fpm"]["run_update"]</tt></td>
     <td>Boolean</td>
-    <td>Run hostupgrade::upgrade</td>
+    <td>Run hostupgrade::upgrade. Will only run first-run by default; set ["hostupgrade"]["first_time_only"] to false if required every time.</td>
     <td><tt>true</tt></td>
+  </tr>
+  <tr>
+    <td><tt>["php_fpm"]["install_php_modules"]</tt></td>
+    <td>Boolean</td>
+    <td>Install Additional PHP Modules stated in ["php_fpm"]["php_modules"]</td>
+    <td><tt>false</tt></td>
+  </tr>
+  <tr>
+    <td><tt>["php_fpm"]["php_modules"]</tt></td>
+    <td>Array</td>
+    <td>List additional PHP Modules you wish to install.</td>
+    <td><tt>['php5-common','php5-mysql','php5-curl','php5-gd'] *OS Dependent</tt></td>
   </tr>
   <tr>
     <td><tt>["php_fpm"]["create_users"]</tt></td>
     <td>Boolean</td>
-    <td>Configure Users</td>
+    <td>Configure Users. Must include recipe recipe[php5-fpm::create_user]</td>
     <td><tt>true</tt></td>
   </tr>
   <tr>
