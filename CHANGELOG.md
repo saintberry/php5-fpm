@@ -1,6 +1,12 @@
 php5-fpm CHANGELOG
 =================
 
+0.4.1
+-----
+- stajkowski - Added support for sockets in LWRP Provider.  Please set use_sockets true and state the socket and backlog with listen_socket / listen_backlog.
+
+- - -
+
 0.4.0
 -----
 - stajkowski - As of version 4.0, you can auto-calculate the procs and workers needed and define the percentage of resources the pool should consume on the server.  This allows for quick creation of php-fpm pools and not having

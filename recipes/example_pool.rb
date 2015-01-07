@@ -21,12 +21,12 @@ php5_fpm_pool "example" do
 	listen_owner "nobody"
 	listen_group "nobody"
 	listen_mode "0666"
-    php_ini_flags (
-                    { "display_errors" => "off", "log_errors" => "on"}
-                  )
-    php_ini_values (
-                      { "sendmail_path" => "/usr/sbin/sendmail -t -i -f www@my.domain.com", "memory_limit" => "32M"}
-                  )
+  php_ini_flags (
+                  { "display_errors" => "off", "log_errors" => "on"}
+                )
+  php_ini_values (
+                    { "sendmail_path" => "/usr/sbin/sendmail -t -i -f www@my.domain.com", "memory_limit" => "32M"}
+                )
 	overwrite true
 	action :create
 	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
@@ -54,20 +54,20 @@ php5_fpm_pool "example" do
 	pm_start_servers 10
 	pm_min_spare_servers 5
 	pm_max_spare_servers 10
-    auto_calculate true
-    percent_share 80
-    round_down true
+  auto_calculate true
+  percent_share 80
+  round_down true
 	pm_process_idle_timeout "30s"
 	pm_max_requests 1000
 	pm_status_path "/mystatus"
 	ping_path "/myping"
 	ping_response "/myresponse"
-    php_ini_flags (
-                      { "display_errors" => "on", "log_errors" => "off"}
-                  )
-    php_ini_values (
-                       { "sendmail_path" => "/usr/sbin/sendmail -t -i -f www@my.yourdomain.com", "memory_limit" => "16M"}
-                   )
+  php_ini_flags (
+                    { "display_errors" => "on", "log_errors" => "off"}
+                )
+  php_ini_values (
+                     { "sendmail_path" => "/usr/sbin/sendmail -t -i -f www@my.yourdomain.com", "memory_limit" => "16M"}
+                 )
 	action :modify
 	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
@@ -75,4 +75,17 @@ end
 php5_fpm_pool "example2" do
 	action :delete
 	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
+end
+
+php5_fpm_pool "example3sockets" do
+  pool_user "www-data"
+  pool_group "www-data"
+  use_sockets true
+  listen_socket "/var/run/example_sockets.sock"
+  listen_owner "nobody"
+  listen_group "nobody"
+  listen_mode "0666"
+  overwrite true
+  action :create
+  notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
