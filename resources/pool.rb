@@ -17,8 +17,8 @@ attribute :listen_owner, :kind_of => String, :required => false, :default => nil
 attribute :listen_group, :kind_of => String, :required => false, :default => nil
 attribute :listen_mode, :kind_of => String, :required => false, :default => nil
 attribute :use_sockets, :kind_of => [ TrueClass, FalseClass ], :required => false, :default => false
-attribute :listen_socket, :king_of => String, :required => false, :default => nil
-attribute :listen_backlog, :king_of => Integer, :required => false, :default => 65536
+attribute :listen_socket, :kind_of => String, :required => false, :default => nil
+attribute :listen_backlog, :kind_of => String, :required => false, :default => '65536'
 
 #PM Configuration
 attribute :pm, :kind_of => String, :required => false, :default => 'dynamic'

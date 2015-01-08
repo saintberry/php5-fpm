@@ -77,14 +77,14 @@ php5_fpm_pool "example2" do
 	notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
 
-php5_fpm_pool "example3sockets" do
-  pool_user "www-data"
-  pool_group "www-data"
+php5_fpm_pool "sockets" do
+  pool_user "fpm_user"
+  pool_group "fpm_group"
   use_sockets true
-  listen_socket "/var/run/example_sockets.sock"
-  listen_owner "nobody"
-  listen_group "nobody"
-  listen_mode "0666"
+  listen_socket "/var/run/phpfpm_example.sock"
+  listen_owner "fpm_user"
+  listen_group "fpm_group"
+  listen_mode "0660"
   overwrite true
   action :create
   notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed

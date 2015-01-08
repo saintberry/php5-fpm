@@ -8,7 +8,7 @@ When using the JSON option with recipes, if you do not wish to use a configurati
 configuration values if they are missing, future proofing the template generation with JSON.
 
 As of version 4.0, you can auto-calculate the procs and workers needed and define the percentage of resources the pool should consume on the server.  This allows for quick creation of php-fpm pools and not having
-to perform the calculation yourself.  Please see the LWRP attributes below and the auto-calculation example but the simplest explantation is the pm configuration will be determined by the calculation.  If the pm
+to perform the calculation yourself.  Please see the LWRP attributes below and the auto-calculation example, but the simplest explanation is the pm configuration will be determined by the calculation.  If the pm
 type is set to static then the max_children will only be used.  If the type is dynamic, the auto-calculation will populate the additional pm configuration options but not the pm.max_requests, this will need to be set
 manually.
 
@@ -460,16 +460,16 @@ end
 
 ```
 php5_fpm_pool "example3sockets" do
-  pool_user "www-data"
-  pool_group "www-data"
-  use_sockets true
-  listen_socket "/var/run/example_sockets.sock"
-  listen_owner "nobody"
-  listen_group "nobody"
-  listen_mode "0666"
-  overwrite true
-  action :create
-  notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
+    pool_user "fpm_user"
+    pool_group "fpm_group"
+    use_sockets true
+    listen_socket "/var/run/phpfpm_example.sock"
+    listen_owner "fpm_user"
+    listen_group "fpm_group"
+    listen_mode "0660"
+    overwrite true
+    action :create
+    notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
 ```
 
