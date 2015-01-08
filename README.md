@@ -23,7 +23,7 @@ manually.
 >CenOS 6.x and above
 >Fedora 20
 >#### Planned Improvements
->0.4.2 - Any additional bugs
+>0.4.3 - Any additional bugs
 >#### Required Cookbooks
 >hostupgrade
 

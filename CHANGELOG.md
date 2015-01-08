@@ -1,6 +1,13 @@
 php5-fpm CHANGELOG
 =================
 
+0.4.2
+-----
+- stajkowski - Fixed metadata to support 11.10 and earlier Chefserver/chef-zero versions.  The metada labels boolean types as string but they are in fact boolean attributes as
+stated in the README.
+
+- - -
+
 0.4.1
 -----
 - stajkowski - Added support for sockets in LWRP Provider.  Please set use_sockets true and state the socket and backlog with listen_socket / listen_backlog.
