@@ -4,9 +4,9 @@ maintainer_email 'stajkowski'
 license          'Apache Open License'
 description      'Installs/Configures php5-fpm'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.4.2'
+version          '0.4.3'
 
-depends 'hostupgrade'
+depends 'hostupgrade', ">= 0.1.3"
 
 supports 'ubuntu', ">= 10.04"
 supports 'debian', ">= 6.0"

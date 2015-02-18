@@ -185,8 +185,8 @@ def load_current_resource
                 configuration_exists(fline,"chroot =") ? @current_resource.chroot(lstring.chomp.strip) : nil
                 configuration_exists(fline,"catch_workers_output =") ? @current_resource.catch_workers_output(lstring.chomp.strip) : nil
                 configuration_exists(fline,"security.limit_extensions =") ? @current_resource.security_limit_extensions(lstring.chomp.strip) : nil
-                configuration_exists(fline,"rlimit_files =") ? @current_resource.rlimit_files(lstring.chomp.strip) : nil
-                configuration_exists(fline,"rlimit_core =") ? @current_resource.rlimit_core(lstring.chomp.strip) : nil
+                configuration_exists(fline,"rlimit_files =") ? @current_resource.rlimit_files(lstring.chomp.strip.to_i) : nil
+                configuration_exists(fline,"rlimit_core =") ? @current_resource.rlimit_core(lstring.chomp.strip.to_i) : nil
 
                 #Start PHP INI
                 configuration_exists(fline,"php_value[#{conf_file_variable}] =") && !@current_resource.php_ini_values.nil? ? tmp_values["#{conf_file_variable}"] = lstring.chomp.strip : nil

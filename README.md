@@ -455,6 +455,8 @@ php5_fpm_pool "example" do
     notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
 ```
+<br />
+<br />
 
 ### Sockets Example
 

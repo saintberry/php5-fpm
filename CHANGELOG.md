@@ -1,6 +1,12 @@
 php5-fpm CHANGELOG
 =================
 
+0.4.3
+-----
+- stajkowski - Fixed rlimit files import to convert to integer, issue #7.
+
+- - -
+
 0.4.2
 -----
 - stajkowski - Fixed metadata to support 11.10 and earlier Chefserver/chef-zero versions.  The metada labels boolean types as string but they are in fact boolean attributes as

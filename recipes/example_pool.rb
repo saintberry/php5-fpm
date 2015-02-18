@@ -12,9 +12,24 @@
 #(_ P _ ((_ H _ ((_ P _ ((_ - _ ((_ F _ ((_ P _ ((_ M _ (_ 
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
+php5_fpm_pool "www2" do
+  pool_user "fpm_user"
+  pool_group "fpm_group"
+  listen_address "127.0.0.1"
+  listen_port 8001
+  listen_allowed_clients "127.0.0.1"
+  listen_owner "nobody"
+  listen_group "nobody"
+  listen_mode "0666"
+  rlimit_files 1001
+  overwrite true
+  action :create
+  notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
+end
+
 php5_fpm_pool "example" do
-	pool_user "www-data"
-	pool_group "www-data"
+	pool_user "fpm_user"
+	pool_group "fpm_group"
 	listen_address "127.0.0.1"
 	listen_port 8000
 	listen_allowed_clients "127.0.0.1"
@@ -33,10 +48,10 @@ php5_fpm_pool "example" do
 end
 
 php5_fpm_pool "example2" do
-	pool_user "www-data"
-	pool_group "www-data"
+	pool_user "fpm_user"
+	pool_group "fpm_group"
 	listen_address "127.0.0.1"
-	listen_port 8000
+	listen_port 8002
 	listen_allowed_clients "127.0.0.1"
 	listen_owner "nobody"
 	listen_group "nobody"
