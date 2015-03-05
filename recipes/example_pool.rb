@@ -12,7 +12,7 @@
 #(_ P _ ((_ H _ ((_ P _ ((_ - _ ((_ F _ ((_ P _ ((_ M _ (_ 
 #  |_( )__||_( )__||_( )__||_( )__||_( )__||_( )__||_( )__|
 
-php5_fpm_pool "www2" do
+php5_fpm_pool "www" do
   pool_user "fpm_user"
   pool_group "fpm_group"
   listen_address "127.0.0.1"

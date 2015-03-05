@@ -142,12 +142,14 @@ def load_current_resource
 
                 #Pull address and port // If we are using sockets bypass
                 if configuration_exists(fline,"listen =") && !@current_resource.use_sockets
-                    #split away the address and port
-                    sp_address = lstring.split(':').at(0)
-                    sp_port = lstring.split(':').at(1)
-                    #remove newline chars and whitespacing
-                    @current_resource.listen_address(sp_address.chomp.strip)
-                    @current_resource.listen_port(sp_port.chomp.strip.to_i)
+                    if fline  =~ /.*\..*\..*\..*:.*/ #do a check on a valid ip address/port combination, if no match, just set new to current
+                      #split away the address and port
+                      sp_address = lstring.split(':').at(0)
+                      sp_port = lstring.split(':').at(1)
+                      #remove newline chars and whitespacing
+                      @current_resource.listen_address(sp_address.chomp.strip)
+                      @current_resource.listen_port(sp_port.chomp.strip.to_i)
+                    end #don't apply the current resource | this is for a socket to ip transition | will work for modify as well
                 elsif configuration_exists(fline,"listen =") && @current_resource.use_sockets  ## Only for sockets
                     @current_resource.listen_socket(lstring.chomp.strip)
                 end

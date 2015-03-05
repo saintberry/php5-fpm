@@ -68,6 +68,5 @@ suites:
     run_list:
       - recipe[php5-fpm::install]
       - recipe[php5-fpm::create_user]
-      - recipe[php5-fpm::configure_pools]
       - recipe[php5-fpm::example_pool]
     attributes:

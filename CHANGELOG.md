@@ -1,6 +1,12 @@
 php5-fpm CHANGELOG
 =================
 
+0.4.4
+-----
+- stajkowski - Fixed socket statement to ip address transition on no overwrite, issue #8.
+
+- - -
+
 0.4.3
 -----
 - stajkowski - Fixed rlimit files import to convert to integer, issue #7.
