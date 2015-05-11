@@ -1,6 +1,12 @@
 php5-fpm CHANGELOG
 =================
 
+0.4.5
+-----
+- stajkowski - Added support for 15.04, fixes issue #12. This release highlights a bug with systemd in vivid and will work once this is addressed with Ubuntu. CI work was done to prepare for build server. HTML table was removed and converted to markdown.
+
+- - -
+
 0.4.4
 -----
 - stajkowski - Fixed socket statement to ip address transition on no overwrite, issue #8.
