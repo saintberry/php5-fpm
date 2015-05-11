@@ -116,7 +116,7 @@ end
 #Enable and Restart PHP5-FPM
 service node["php_fpm"]["package"] do
     #Bug in 14.04 for service provider. Adding until resolved.
-    if (platform?('ubuntu') && node['platform_version'].to_f >= 14.04)
+    if (platform?('ubuntu') && node['platform_version'].to_f == 14.04)
         provider Chef::Provider::Service::Upstart
     end
     supports :start => true, :stop => true, :restart => true, :reload => true

@@ -6,6 +6,13 @@ provisioner:
   name: chef_solo
 
 platforms:
+  - name: ubuntu-15.04
+    driver:
+      provider: virtualbox
+      box: ubuntu/vivid64
+      customize:
+        memory: 1024
+        cpus: 2
   - name: ubuntu-14.04
     driver:
       provider: virtualbox
