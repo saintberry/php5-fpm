@@ -1,6 +1,5 @@
 PHP5-FPM Cookbook
 =====
-<br />
 Adding pools can be done by way of LWRP provider or by modifying JSON directly in the attributes file or overriding the attributes through other methods, environments, roles, etc.  Usage of the receipes beyond ::install is optional and not
 needed if using the LWRP provider.
 
@@ -27,357 +26,88 @@ manually.
 >#### Required Cookbooks
 >hostupgrade
 
-<br />
-<br />
-<br />
+
 #Attributes
 _____
 ### php5-fpm::default
-<br />
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["use_cookbook_repos"]</tt></td>
-    <td>Boolean</td>
-    <td>Use cookbook to install repos for earlier OS versions, ubuntu 10.04, centos 6.x, debian 6.x</td>
-    <td><tt>true</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["run_update"]</tt></td>
-    <td>Boolean</td>
-    <td>Run hostupgrade::upgrade. Will only run first-run by default; set ["hostupgrade"]["first_time_only"] to false if required every time.</td>
-    <td><tt>true</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["install_php_modules"]</tt></td>
-    <td>Boolean</td>
-    <td>Install Additional PHP Modules stated in ["php_fpm"]["php_modules"]</td>
-    <td><tt>false</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["php_modules"]</tt></td>
-    <td>Array</td>
-    <td>List additional PHP Modules you wish to install.</td>
-    <td><tt>['php5-common','php5-mysql','php5-curl','php5-gd'] *OS Dependent</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["create_users"]</tt></td>
-    <td>Boolean</td>
-    <td>Configure Users. Must include recipe recipe[php5-fpm::create_user]</td>
-    <td><tt>true</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["users"]</tt></td>
-    <td>JSON</td>
-    <td>Users/Directories to Add</td>
-    <td><tt>Attributes File</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["config"]</tt></td>
-    <td>JSON</td>
-    <td>PHP-FPM.conf Configuration Values</td>
-    <td><tt>Attributes File</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["pools"]</tt></td>
-    <td>JSON</td>
-    <td>pool.conf Configuration Values</td>
-    <td><tt>Attributes File</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["ubuntu1004_config"]</tt></td>
-    <td>JSON</td>
-    <td>PHP-FPM.conf Configuration Values Ubuntu 10.04 Only</td>
-    <td><tt>Attributes File</tt></td>
-  </tr>
-  <tr>
-    <td><tt>["php_fpm"]["ubuntu1004_pools"]</tt></td>
-    <td>JSON</td>
-    <td>pool.conf Configuration Values Ubuntu 10.04 Only</td>
-    <td><tt>Attributes File</tt></td>
-  </tr>
-</table>
-<br />
-<br />
-<br />
+
+| Key                                | Type    | Description                                                                                                                           | Default                                                          |
+|------------------------------------|---------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| ["php_fpm"]["use_cookbook_repos"]  | Boolean | Use cookbook to install repos for earlier OS versions, ubuntu 10.04, centos 6.x, debian 6.x                                           | true                                                             |
+| ["php_fpm"]["run_update"]          | Boolean | Run hostupgrade::upgrade. Will only run first-run by default; set ["hostupgrade"]["first_time_only"] to false if required every time. | true                                                             |
+| ["php_fpm"]["install_php_modules"] | Boolean | Install Additional PHP Modules stated in ["php_fpm"]["php_modules"]                                                                   | false                                                            |
+| ["php_fpm"]["php_modules"]         | Array   | List additional PHP Modules you wish to install.                                                                                      | ['php5-common','php5-mysql','php5-curl','php5-gd'] *OS Dependent |
+| ["php_fpm"]["create_users"]        | Boolean | Configure Users. Must include recipe recipe[php5-fpm::create_user]                                                                    | true                                                             |
+| ["php_fpm"]["users"]               | JSON    | Users/Directories to Add                                                                                                              | Attributes File                                                  |
+| ["php_fpm"]["config"]              | JSON    | PHP-FPM.conf Configuration Values                                                                                                     | Attributes File                                                  |
+| ["php_fpm"]["pools"]               | JSON    | pool.conf Configuration Values                                                                                                        | Attributes File                                                  |
+| ["php_fpm"]["ubuntu1004_config"]   | JSON    | PHP-FPM.conf Configuration Values Ubuntu 10.04 Only                                                                                   | Attributes File                                                  |
+| ["php_fpm"]["ubuntu1004_pools"]    | JSON    | pool.conf Configuration Values Ubuntu 10.04 Only                                                                                      | Attributes File                                                                 |
+
 # Resource/Provider
 ______
 ## php5_fpm_pool
-<br />
+
 ### Actions
 
 * create
 * modify
 * delete
-<br />
-<br />
 
 ### Attribute Parameters
 
-<table>
-    <tr>
-        <th>Attribute</th>
-        <th>Type</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td>overwrite</td>
-        <td>True/False Default: false</td>
-        <td>Determine if the pool configuration will be overwritten if it exists.</td>
-    </tr>
-    <tr>
-        <td><b>Base Pool</b></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>pool_name</td>
-        <td>String</td>
-        <td>Name of the pool; it will also be used to name the pool file.</td>
-    </tr>
-    <tr>
-        <td>pool_user</td>
-        <td>String Default: www-data</td>
-        <td>Sets the <i>user</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>pool_group</td>
-        <td>String Default: www-data</td>
-        <td>Sets the <i>group</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>listen_address</td>
-        <td>String Default: 127.0.0.1</td>
-        <td>Sets the <i>listen</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>listen_port</td>
-        <td>Integer Default: 9000</td>
-        <td>Sets the <i>listen</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>listen_allowed_clients</td>
-        <td>String Default: nil</td>
-        <td>Sets the <i>listen.allowed_clients</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>listen_owner</td>
-        <td>String Default: nil</td>
-        <td>Sets the <i>listen.owner</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>listen_group</td>
-        <td>String Default: nil</td>
-        <td>Sets the <i>listen.group</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>listen_mode</td>
-        <td>String Default: nil</td>
-        <td>Sets the <i>listen.mode</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>use_sockets</td>
-        <td>Boolean Default: false</td>
-        <td>If set, this overrides IPv4 assignment for <i>listen</i> attribute in the pool conf file to use sockets</td>
-    </tr>
-    <tr>
-        <td>listen_socket</td>
-        <td>String Default: nil</td>
-        <td>Sets the <i>listen</i> attribute in the pool conf file.(Requires: use_sockets true)</td>
-    </tr>
-    <tr>
-        <td>listen_backlog</td>
-        <td>Integer Default: 65536</td>
-        <td>Sets the <i>listen.backlog</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td><b>PM Config</b></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>pm</td>
-        <td>String Default: dynamic</td>
-        <td>Sets the <i>pm</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>pm_max_children</td>
-        <td>Integer Default: 10</td>
-        <td>Sets the <i>pm.max_children</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>pm_start_servers</td>
-        <td>Integer Default: 4</td>
-        <td>Sets the <i>pm.start_servers</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>pm_min_spare_servers</td>
-        <td>Integer Default: 2</td>
-        <td>Sets the <i>pm.min_spare_servers</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>pm_max_spare_servers</td>
-        <td>Integer Default: 6</td>
-        <td>Sets the <i>pm.max_spare_servers</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>pm_process_idle_timeout</td>
-        <td>String Default: 10s</td>
-        <td>Sets the <i>pm.process_idle_timeout</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>pm_max_requests</td>
-        <td>Integer Default: 0</td>
-        <td>Sets the <i>pm.max_requests</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>pm_status_path</td>
-        <td>String Default: /status</td>
-        <td>Sets the <i>pm.status_path</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td><b>Ping</b></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>ping_path</td>
-        <td>String Default: /ping</td>
-        <td>Sets the <i>ping.path</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>ping_response</td>
-        <td>String Default: /pong</td>
-        <td>Sets the <i>ping.response</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td><b>Logging</b></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>access_format</td>
-        <td>String Default: %R - %u %t \"%m %r\" %s</td>
-        <td>Sets the <i>access.format</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>request_slowlog_timeout</td>
-        <td>Integer Default: 0</td>
-        <td>Sets the <i>request_slowlog_timeout</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>request_terminate_timeout</td>
-        <td>Integer Default: 0</td>
-        <td>Sets the <i>request_terminate_timeout</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>access_log</td>
-        <td>String Default: nil</td>
-        <td>Sets the <i>access.log</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>slow_log</td>
-        <td>String Default: nil</td>
-        <td>Sets the <i>slowlog</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td><b>MISC</b></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>chdir</td>
-        <td>String Default: /</td>
-        <td>Sets the <i>chdir</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>chroot</td>
-        <td>String Default: nil</td>
-        <td>Sets the <i>chroot</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>catch_workers_output</td>
-        <td>String yes/no Default: no</td>
-        <td>Sets the <i>catch_workers_output</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>security_limit_extensions</td>
-        <td>String Default: .php</td>
-        <td>Sets the <i>security.limit_extensions</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>rlimit_files</td>
-        <td>Integer Default: nil</td>
-        <td>Sets the <i>rlimit_files</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>rlimit_core</td>
-        <td>Integer Default: nil</td>
-        <td>Sets the <i>rlimit_core</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td><b>PHP Conf Flags/Values</b></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>php_ini_flags</td>
-        <td>Hash Default: nil</td>
-        <td>Sets the <i>php_flag[]</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>php_ini_values</td>
-        <td>Hash Default: nil</td>
-        <td>Sets the <i>php_value[]</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>php_ini_admin_flags</td>
-        <td>Hash Default: nil</td>
-        <td>Sets the <i>php_admin_flag[]</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td>php_ini_admin_values</td>
-        <td>Hash Default: nil</td>
-        <td>Sets the <i>php_admin_value[]</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td><b>Environment Vars</b></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>env_variables</td>
-        <td>Hash Default: nil</td>
-        <td>Sets the <i>env[]</i> attribute in the pool conf file.</td>
-    </tr>
-    <tr>
-        <td><b>Auto-Calculate</b></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>auto_calculate</td>
-        <td>String Default: false</td>
-        <td>Enables auto-calculation of php-fpm pool resources.</td>
-    </tr>
-    <tr>
-        <td>percent_share</td>
-        <td>Integer 1 - 100 Default: 100</td>
-        <td>Defines the percentage share of the server resources the pool can consume.</td>
-    </tr>
-    <tr>
-        <td>round_down</td>
-        <td>String Default: false</td>
-        <td>Round-up is defined by default; set round_down to trye to go the other way.</td>
-    </tr>
-</table>
-<br />
-<br />
+| Attribute                 | Type                                    | Description                                                                                      |
+|---------------------------|-----------------------------------------|--------------------------------------------------------------------------------------------------|
+| overwrite                 | True/False Default: false               | Determine if the pool configuration will be overwritten if it exists.                            |
+| Base Pool                 |                                         |                                                                                                  |
+| pool_name                 | String                                  | Name of the pool; it will also be used to name the pool file.                                    |
+| pool_user                 | String Default: www-data                | Sets the user attribute in the pool conf file.                                                   |
+| pool_group                | String Default: www-data                | Sets the group attribute in the pool conf file.                                                  |
+| listen_address            | String Default: 127.0.0.1               | Sets the listen attribute in the pool conf file.                                                 |
+| listen_port               | Integer Default: 9000                   | Sets the listen attribute in the pool conf file.                                                 |
+| listen_allowed_clients    | String Default: nil                     | Sets the listen.allowed_clients attribute in the pool conf file.                                 |
+| listen_owner              | String Default: nil                     | Sets the listen.owner attribute in the pool conf file.                                           |
+| listen_group              | String Default: nil                     | Sets the listen.group attribute in the pool conf file.                                           |
+| listen_mode               | String Default: nil                     | Sets the listen.mode attribute in the pool conf file.                                            |
+| use_sockets               | Boolean Default: false                  | If set, this overrides IPv4 assignment for listen attribute in the pool conf file to use sockets |
+| listen_socket             | String Default: nil                     | Sets the listen attribute in the pool conf file.(Requires: use_sockets true)                     |
+| listen_backlog            | Integer Default: 65536                  | Sets the listen.backlog attribute in the pool conf file.                                         |
+| PM Config                 |                                         |                                                                                                  |
+| pm                        | String Default: dynamic                 | Sets the pm attribute in the pool conf file.                                                     |
+| pm_max_children           | Integer Default: 10                     | Sets the pm.max_children attribute in the pool conf file.                                        |
+| pm_start_servers          | Integer Default: 4                      | Sets the pm.start_servers attribute in the pool conf file.                                       |
+| pm_min_spare_servers      | Integer Default: 2                      | Sets the pm.min_spare_servers attribute in the pool conf file.                                   |
+| pm_max_spare_servers      | Integer Default: 6                      | Sets the pm.max_spare_servers attribute in the pool conf file.                                   |
+| pm_process_idle_timeout   | String Default: 10s                     | Sets the pm.process_idle_timeout attribute in the pool conf file.                                |
+| pm_max_requests           | Integer Default: 0                      | Sets the pm.max_requests attribute in the pool conf file.                                        |
+| pm_status_path            | String Default: /status                 | Sets the pm.status_path attribute in the pool conf file.                                         |
+| Ping                      |                                         |                                                                                                  |
+| ping_path                 | String Default: /ping                   | Sets the ping.path attribute in the pool conf file.                                              |
+| ping_response             | String Default: /pong                   | Sets the ping.response attribute in the pool conf file.                                          |
+| Logging                   |                                         |                                                                                                  |
+| access_format             | String Default: %R - %u %t \"%m %r\" %s | Sets the access.format attribute in the pool conf file.                                          |
+| request_slowlog_timeout   | Integer Default: 0                      | Sets the request_slowlog_timeout attribute in the pool conf file.                                |
+| request_terminate_timeout | Integer Default: 0                      | Sets the request_terminate_timeout attribute in the pool conf file.                              |
+| access_log                | String Default: nil                     | Sets the access.log attribute in the pool conf file.                                             |
+| slow_log                  | String Default: nil                     | Sets the slowlog attribute in the pool conf file.                                                |
+| MISC                      |                                         |                                                                                                  |
+| chdir                     | String Default: /                       | Sets the chdir attribute in the pool conf file.                                                  |
+| chroot                    | String Default: nil                     | Sets the chroot attribute in the pool conf file.                                                 |
+| catch_workers_output      | String yes/no Default: no               | Sets the catch_workers_output attribute in the pool conf file.                                   |
+| security_limit_extensions | String Default: .php                    | Sets the security.limit_extensions attribute in the pool conf file.                              |
+| rlimit_files              | Integer Default: nil                    | Sets the rlimit_files attribute in the pool conf file.                                           |
+| rlimit_core               | Integer Default: nil                    | Sets the rlimit_core attribute in the pool conf file.                                            |
+| PHP Conf Flags/Values     |                                         |                                                                                                  |
+| php_ini_flags             | Hash Default: nil                       | Sets the php_flag[] attribute in the pool conf file.                                             |
+| php_ini_values            | Hash Default: nil                       | Sets the php_value[] attribute in the pool conf file.                                            |
+| php_ini_admin_flags       | Hash Default: nil                       | Sets the php_admin_flag[] attribute in the pool conf file.                                       |
+| php_ini_admin_values      | Hash Default: nil                       | Sets the php_admin_value[] attribute in the pool conf file.                                      |
+| Environment Vars          |                                         |                                                                                                  |
+| env_variables             | Hash Default: nil                       | Sets the env[] attribute in the pool conf file.                                                  |
+| Auto-Calculate            |                                         |                                                                                                  |
+| auto_calculate            | String Default: false                   | Enables auto-calculation of php-fpm pool resources.                                              |
+| percent_share             | Integer 1 - 100 Default: 100            | Defines the percentage share of the server resources the pool can consume.                       |
+| round_down                | String Default: false                   | Round-up is defined by default; set round_down to trye to go the other way.                      |
 
 ### Example
 
@@ -427,8 +157,6 @@ php5_fpm_pool "example" do
     notifies :restart, "service[#{node["php_fpm"]["packag"]}]", :delayed
 end
 ```
-<br />
-<br />
 
 ### Auto-Calculate Example
 
@@ -455,8 +183,6 @@ php5_fpm_pool "example" do
     notifies :restart, "service[#{node["php_fpm"]["package"]}]", :delayed
 end
 ```
-<br />
-<br />
 
 ### Sockets Example
 
@@ -475,9 +201,6 @@ php5_fpm_pool "example3sockets" do
 end
 ```
 
-<br />
-<br />
-<br />
 # Recipe Usage
 
 ### php-fpm::install (required)
@@ -531,9 +254,7 @@ Example on how to use the LWRP provider.  This is not a required recipe but incl
   ]
 }
 ```
-<br />
-<br />
-<br />
+
 # License and Authors
 ___
 Authors: Brian Stajkowski
