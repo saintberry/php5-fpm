@@ -232,7 +232,7 @@ def create_file
 
         f.puts "[#{ @new_resource.pool_name }]"
 
-        f.puts "###### Base Pool Configuration"
+        f.puts ";;;;;; Base Pool Configuration"
         f.puts "user = #{ @new_resource.pool_user }"
         f.puts "group = #{ @new_resource.pool_group }"
         if !@current_resource.use_sockets
@@ -247,7 +247,7 @@ def create_file
         @current_resource.listen_mode != nil ? (f.puts "listen.mode = #{ @new_resource.listen_mode }") : nil
         @current_resource.listen_backlog != nil ? (f.puts "listen.backlog = #{ @new_resource.listen_backlog }") : nil
 
-        f.puts "###### PM Configuration"
+        f.puts ";;;;;; PM Configuration"
         @current_resource.pm != nil ? (f.puts "pm = #{ @new_resource.pm }") : nil
         @current_resource.pm_max_children != nil ? (f.puts "pm.max_children = #{ @new_resource.pm_max_children }") : nil
         @current_resource.pm_start_servers != nil ? (f.puts "pm.start_servers = #{ @new_resource.pm_start_servers }") : nil
@@ -257,18 +257,18 @@ def create_file
         @current_resource.pm_max_requests != nil ? (f.puts "pm.max_requests = #{ @new_resource.pm_max_requests }") : nil
         @current_resource.pm_status_path != nil ? (f.puts "pm.status_path = #{ @new_resource.pm_status_path }") : nil
 
-        f.puts "###### Ping Status"
+        f.puts ";;;;;; Ping Status"
         @current_resource.ping_path != nil ? (f.puts "ping.path = #{ @new_resource.ping_path }") : nil
         @current_resource.ping_response != nil ? (f.puts "ping.response = #{ @new_resource.ping_response }") : nil
 
-        f.puts "###### Logging"
+        f.puts ";;;;;; Logging"
         @current_resource.access_format != nil && !node[:platform_version].include?("10.04") ? (f.puts "access.format = #{ @new_resource.access_format }".gsub! '\\', '') : nil
         @current_resource.request_slowlog_timeout != nil ? (f.puts "request_slowlog_timeout = #{ @new_resource.request_slowlog_timeout }") : nil
         @current_resource.request_terminate_timeout != nil ? (f.puts "request_terminate_timeout = #{ @new_resource.request_terminate_timeout }") : nil
         @current_resource.access_log != nil ? (f.puts "access.log = #{ @new_resource.access_log }") : nil
         @current_resource.slow_log != nil ? (f.puts "slowlog = #{ @new_resource.slow_log }") : nil
 
-        f.puts "###### Misc"
+        f.puts ";;;;;; Misc"
         @current_resource.chdir != nil ? (f.puts "chdir = #{ @new_resource.chdir }") : nil
         @current_resource.chroot != nil ? (f.puts "chroot = #{ @new_resource.chroot }") : nil
         @current_resource.catch_workers_output != nil ? (f.puts "catch_workers_output = #{ @new_resource.catch_workers_output }") : nil
@@ -276,35 +276,35 @@ def create_file
         @current_resource.rlimit_files != nil ? (f.puts "rlimit_files = #{ @new_resource.rlimit_files }") : nil
         @current_resource.rlimit_core != nil ? (f.puts "rlimit_core = #{ @new_resource.rlimit_core }") : nil
 
-        f.puts "##### PHP INI Values"
+        f.puts ";;;;;; PHP INI Values"
         if !@new_resource.php_ini_values.nil?
             @new_resource.php_ini_values.each do | k, v |
                 f.puts "php_value[#{ k }] = #{ v }"
             end
         end
 
-        f.puts "##### PHP INI Flags"
+        f.puts ";;;;;; PHP INI Flags"
         if !@new_resource.php_ini_flags.nil?
             @new_resource.php_ini_flags.each do | k, v |
                 f.puts "php_flag[#{ k }] = #{ v }"
             end
         end
 
-        f.puts "##### PHP INI Admin Values"
+        f.puts ";;;;;; PHP INI Admin Values"
         if !@new_resource.php_ini_admin_values.nil?
             @new_resource.php_ini_admin_values.each do | k, v |
                 f.puts "php_admin_value[#{ k }] = #{ v }"
             end
         end
 
-        f.puts "##### PHP INI Admin Flags"
+        f.puts ";;;;;; PHP INI Admin Flags"
         if !@new_resource.php_ini_admin_flags.nil?
             @new_resource.php_ini_admin_flags.each do | k, v |
                 f.puts "php_admin_flag[#{ k }] = #{ v }"
             end
         end
 
-        f.puts "##### ENV Variables"
+        f.puts ";;;;;; ENV Variables"
         if !@new_resource.env_variables.nil?
             @new_resource.env_variables.each do | k, v |
                 f.puts "env[#{ k }] = #{ v }"
